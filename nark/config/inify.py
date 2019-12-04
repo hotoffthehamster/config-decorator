@@ -247,6 +247,20 @@ class ConfigDecorator(Subscriptable):
 
     # ***
 
+    def keys(self):
+        # MAYBE/2019-11-30: (lb): What about self._sections??
+        return self._key_vals.keys()
+
+    def values(self):
+        # MAYBE/2019-11-30: (lb): What about self._sections??
+        return [v.value for v in self._key_vals.values()]
+
+    def items(self):
+        # MAYBE/2019-11-30: (lb): What about self._sections??
+        return {k: v.value for k,v in self._key_vals.items()}
+
+    # ***
+
     def _find(self, parts, skip_sections=False):
         # If caller specifies just one part, we'll do a loose, lazy match.
         # Otherwise, if parts is more than just one entry, look for exact.
