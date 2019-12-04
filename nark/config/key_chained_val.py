@@ -72,11 +72,17 @@ class KeyChainedValue(object):
             return value_type
         elif self.ephemeral:
             return lambda val: val
-        elif isinstance(self.default, bool):
+        return self.deduce_default_type()
+
+    def deduce_default_type(self):
+        default_value = self.default
+        if default_value is None:
+            return lambda val: val
+        elif isinstance(default_value, bool):
             return bool
-        elif isinstance(self.default, int):
+        elif isinstance(default_value, int):
             return int
-        elif isinstance(self.default, list):
+        elif isinstance(default_value, list):
             # Because ConfigObj auto-detects list-like values,
             # we might get a string value in a list-type setting,
             # which we don't want to ['s', 'p', 'l', 'i', 't'].
@@ -84,7 +90,11 @@ class KeyChainedValue(object):
             #   return list
             # we gotta be smarter.
             return lambda val: isinstance(val, list) and val or [val]
-        return str
+        elif isinstance(default_value, str):
+            return str
+        # We could default to, say, str, or we could nag user to either
+        # add another `elif` here, or to fix their default return value.
+        raise NotImplementedError
 
     @property
     def doc(self):
