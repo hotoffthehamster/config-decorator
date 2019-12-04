@@ -76,6 +76,14 @@ class KeyChainedValue(object):
             return bool
         elif isinstance(self.default, int):
             return int
+        elif isinstance(self.default, list):
+            # Because ConfigObj auto-detects list-like values,
+            # we might get a string value in a list-type setting,
+            # which we don't want to ['s', 'p', 'l', 'i', 't'].
+            # So rather than a blind:
+            #   return list
+            # we gotta be smarter.
+            return lambda val: isinstance(val, list) and val or [val]
         return str
 
     @property
