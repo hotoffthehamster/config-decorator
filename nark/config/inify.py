@@ -322,7 +322,7 @@ class ConfigDecorator(Subscriptable):
 
     def _find_one_object(self, name):
         parts = name.split('.')
-        if parts:
+        if len(parts) > 1:
             # User looked up, e.g., config['section1.section2....key'].
             objects = self._find(parts)
         else:
