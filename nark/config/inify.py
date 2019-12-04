@@ -146,6 +146,8 @@ class ConfigDecorator(Subscriptable):
 
         return _download_to_dict()
 
+    # ***
+
     def _section_path(self, parts=None, sep='_'):
         if parts is None:
             parts = []
@@ -155,11 +157,15 @@ class ConfigDecorator(Subscriptable):
         parts.insert(0, self._name)
         return self._parent._section_path(parts, sep)
 
+    # ***
+
     def _walk(self, visitor):
         for keyval in self._key_vals.values():
             visitor(self, keyval)
         for conf_dcor in self._sections.values():
             conf_dcor._walk(visitor)
+
+    # ***
 
     def _find(self, parts, skip_sections=False):
         # If caller specifies just one part, we'll do a loose, lazy match.
@@ -216,10 +222,14 @@ class ConfigDecorator(Subscriptable):
             return objects[0]
         return None
 
+    # ***
+
     def forget_config_values(self):
         def visitor(condec, keyval):
             keyval.forget_config_value()
         self._walk(visitor)
+
+    # ***
 
     # A @redecorator.
     def section(self, name):
@@ -240,6 +250,7 @@ class ConfigDecorator(Subscriptable):
             )
             self._kv_cache[ckv.name] = ckv
 
+            # EXPLAIN/2019-11-30: (lb): Why not just `return func`?
             def _decorator(*args, **kwargs):
                 return func(*args, **kwargs)
             return update_wrapper(_decorator, func)
@@ -304,6 +315,8 @@ class ConfigDecorator(Subscriptable):
 
     def __getattr__(self, name):
         return self._find_one_object(name)
+
+    # ***
 
     def _find_one_object(self, name):
         parts = name.split('.')
