@@ -168,11 +168,11 @@ class ConfigDecorator(Subscriptable):
 
     # ***
 
-    def update_from_dict(self, config):
+    def _update_known(self, config):
         unconsumed = {name: None for name in config.keys()}
         for section, conf_dcor in self._sections.items():
             if section in config:
-                unsubsumed = conf_dcor.update_from_dict(config[section])
+                unsubsumed = conf_dcor._update_known(config[section])
                 if not unsubsumed:
                     del unconsumed[section]
                 else:
@@ -185,6 +185,40 @@ class ConfigDecorator(Subscriptable):
                 ckv.value = config[name]
                 del unconsumed[name]
         return unconsumed
+
+    # ***
+
+    def _update_gross(self, other):
+        # See also, _update_known, which does not add unknown values.
+        # This method grabs everything from `other` and shoves it in this
+        # ConfigDecorator object. You might find this useful if your app
+        # allows self-defined config. E.g., in dob, the user can define
+        # their own named styles (that can be referenced in another config).
+        # In that instance, the application cannot define the config (key
+        # names) ahead of time (using @setting decorators), but instead
+        # uses the key names that the user supplies (and calls this method
+        # to consume those unknown settings).
+
+        # CAVEAT: (lb): I've only used this method as a shallow update,
+        # for flat config (i.e., all values are KeyChainedValue objects,
+        # and there are no sections (ConfigDecorator objects)).
+        # MAYBE/2019-11-30: (lb): Ensure this handles nested dicts in other,
+        # and sets _sections, etc. (For now, you can work around by flattening
+        # other and using dotted names to indicate sub-sections, because the
+        # setdefault method *is* smart enough to find nested section settings.)
+        for key, val in other.items():
+            try:
+                self[key] = val
+            except KeyError:
+                self.setdefault(key, val)
+
+    # (lb): We have some dict-ish methods, like setdefault, and keys, values,
+    # and items, so might as well have an update method, too. But update is
+    # just a shim to _update_gross, so that you're aware there's also the
+    # similar method, _update_known. update calls _update_gross, which is
+    # more like the actual dict.update() method than _update_known.
+    def update(self, other):
+        self._update_gross(other)
 
     # ***
 
