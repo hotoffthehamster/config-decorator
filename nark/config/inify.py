@@ -335,7 +335,7 @@ class ConfigDecorator(Subscriptable):
             return objects[0]
         else:
             # DEV: This happens if you lookup at attr in config you didn't define.
-            raise Exception(
+            raise KeyError(
                 _('Unrecognized config key: {}.__get__attr__(name="{}")').format(
                     self.__class__.__name__, name,
                 )
