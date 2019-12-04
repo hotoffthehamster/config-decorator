@@ -68,8 +68,10 @@ class KeyChainedValue(object):
         return self._default_f(self._section)
 
     def deduce_value_type(self, value_type=None):
-        if self.ephemeral or value_type is not None:
+        if value_type is not None:
             return value_type
+        elif self.ephemeral:
+            return lambda val: val
         elif isinstance(self.default, bool):
             return bool
         elif isinstance(self.default, int):
