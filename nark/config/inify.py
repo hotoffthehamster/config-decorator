@@ -69,12 +69,13 @@ class ConfigDecorator(Subscriptable):
         else:
             self._name = cls.__name__
 
-        if parent is not None:
-            self._pull_kv_cache(parent)
+        self._pull_kv_cache(parent)
 
         self._initialized = True
 
     def _pull_kv_cache(self, parent):
+        if parent is None:
+            return
         # The @decorators run against the parent object.
         # - Fix the settings from the parent cache
         #   to reference this object as the owner.
@@ -84,7 +85,8 @@ class ConfigDecorator(Subscriptable):
         self._key_vals.update(parent._kv_cache)
         parent._kv_cache = OrderedDict()
         # - Register this object as a section.
-        parent._sections[self._name] = self
+        if parent is not self:
+            parent._sections[self._name] = self
 
     def update_from_dict(self, config):
         unconsumed = {name: None for name in config.keys()}
@@ -366,24 +368,48 @@ class ConfigDecorator(Subscriptable):
 # then the method being invoked must return the actual decorator.
 #
 # Here we support either approach.
+
 def section(cls_or_name, parent=None):
     def _add_section(cls):
-        # So that two different modules can build the same config,
-        #   e.g., in project/myfile1:
-        #     @ConfigRoot.section('shared')
-        #     class ConfigurableA(Subscriptable):
-        #         ...
-        #   then in project/myfile2:
-        #     @ConfigRoot.section('shared')
-        #     class ConfigurableB(Subscriptable):
-        #         ...
-        # Return the named section if previously defined.
-        if parent and cls_or_name in parent._sections:
-            existing_section = parent._sections[cls_or_name]
-            existing_section._pull_kv_cache(parent)
-            return existing_section
-        return ConfigDecorator(cls, cls_or_name, parent=parent)
+        cfg_dcor = None
+        if parent is None or not cls_or_name:
+            if parent is not None:
+                # The section name is empty, so add settings to the parent.
+                # This is useful for using multiple classes to define the
+                # settings, but having the settings all added to the same
+                # config object. You might do this so you can separate the
+                # settings in the code into multiple classes (useful for
+                # many reasons, e.g., DRYing code by sharing common methods,
+                # or spreading code across multiple files (like plugins)), but
+                # also so you can keep the config flat (useful for not making
+                # life harder for an end user human that will be editing the
+                # flat file config). tl;dr add section to parent.
+                cfg_dcor = parent
+        elif cls_or_name and cls_or_name in parent._sections:
+            # So that two different modules can build the same config,
+            #   e.g., in project/myfile1:
+            #     @ConfigRoot.section('shared')
+            #     class ConfigurableA(Subscriptable):
+            #         ...
+            #   then in project/myfile2:
+            #     @ConfigRoot.section('shared')
+            #     class ConfigurableB(Subscriptable):
+            #         ...
+            # and also for the reasons listed in the long previous comment,
+            # return the named section if previously defined.
+            cfg_dcor = parent._sections[cls_or_name]
 
+        if cfg_dcor is None:
+            # The constructor calls _pull_kv_cache if parent is not None.
+            cfg_dcor = ConfigDecorator(cls, cls_or_name, parent=parent)
+
+        # For calling _pull_kv_cache, have parent be self, so
+        # one can add settings to the root config object.
+        cfg_dcor._pull_kv_cache(parent or cfg_dcor)
+
+        return cfg_dcor
+
+    # Check if decorator was @gentle or @explicit().
     if inspect.isclass(cls_or_name):
         # The decorator was used without being invoked first, e.g.,
         #   @section
