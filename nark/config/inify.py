@@ -27,7 +27,6 @@ from gettext import gettext as _
 
 from .key_chained_val import KeyChainedValue
 from .subscriptable import Subscriptable
-#from ..helpers import dob_in_user_warning
 
 __all__ = (
     'section',
@@ -73,6 +72,8 @@ class ConfigDecorator(Subscriptable):
 
         self._initialized = True
 
+    # ***
+
     def _pull_kv_cache(self, parent):
         if parent is None:
             return
@@ -88,23 +89,40 @@ class ConfigDecorator(Subscriptable):
         if parent is not self:
             parent._sections[self._name] = self
 
-    def update_from_dict(self, config):
-        unconsumed = {name: None for name in config.keys()}
-        for section, conf_dcor in self._sections.items():
-            if section in config:
-                unsubsumed = conf_dcor.update_from_dict(config[section])
-                if not unsubsumed:
-                    del unconsumed[section]
-                else:
-                    unconsumed[section] = unsubsumed
-        for name, ckv in self._key_vals.items():
-            if ckv.ephemeral:
-                # Essentially unreachable, unless hacked config file.
-                continue
-            if name in config:
-                ckv.value = config[name]
-                del unconsumed[name]
-        return unconsumed
+    # ***
+
+    def _find_root(self):
+        if not self._parent:
+            return self
+        return self._parent._find_root()
+
+    # ***
+
+    def _forget_config_values(self):
+        def visitor(condec, keyval):
+            keyval.forget_config_value()
+        self._walk(visitor)
+
+    # ***
+
+    def _section_path(self, parts=None, sep='_'):
+        if parts is None:
+            parts = []
+        # Ignore the root element. Start with its sections.
+        if self._parent is None:
+            return sep.join(parts)
+        parts.insert(0, self._name)
+        return self._parent._section_path(parts, sep)
+
+    # ***
+
+    def _walk(self, visitor):
+        for keyval in self._key_vals.values():
+            visitor(self, keyval)
+        for conf_dcor in self._sections.values():
+            conf_dcor._walk(visitor)
+
+    # ***
 
     def as_dict(self):
         newd = {}
@@ -150,113 +168,25 @@ class ConfigDecorator(Subscriptable):
 
     # ***
 
-    def _section_path(self, parts=None, sep='_'):
-        if parts is None:
-            parts = []
-        # Ignore the root element. Start with its sections.
-        if self._parent is None:
-            return sep.join(parts)
-        parts.insert(0, self._name)
-        return self._parent._section_path(parts, sep)
-
-    # ***
-
-    def _walk(self, visitor):
-        for keyval in self._key_vals.values():
-            visitor(self, keyval)
-        for conf_dcor in self._sections.values():
-            conf_dcor._walk(visitor)
-
-    # ***
-
-    def _find(self, parts, skip_sections=False):
-        # If caller specifies just one part, we'll do a loose, lazy match.
-        # Otherwise, if parts is more than just one entry, look for exact.
-        # - This supports use case of user being lazy, e.g., `dob get tz_aware`,
-        #   but also prevents problems being lazy-exact, e.g., `dob get abc xyz`
-        #   should be precise and return only abc.xyz, and not, say, zbc.def.xyz.
-
-        def _find_objects():
-            if not parts:
-                return [self]
-            elif len(parts) == 1:
-                objects = self._find_objects_named(parts[0], skip_sections)
-            else:
-                section_names = parts[:-1]
-                object_name = parts[-1]
-
-                conf_dcor = self
-                for name in section_names:
-                    # Raises KeyError if one of the sections not found.
-                    conf_dcor = conf_dcor._sections[name]
-
-                objects = []
-                if object_name in conf_dcor._sections and not skip_sections:
-                    objects.append(conf_dcor._sections[object_name])
-                if object_name in conf_dcor._key_vals:
-                    objects.append(conf_dcor._key_vals[object_name])
-
-            return objects
-
-        return _find_objects()
-
-    def _find_objects_named(self, name, skip_sections=False):
-        objects = []
-        if name in self._sections and not skip_sections:
-            # Exact section name match.
-            objects.append(self._sections[name])
-        if name in self._key_vals:
-            # Exact setting name match.
-            objects.append(self._key_vals[name])
+    def update_from_dict(self, config):
+        unconsumed = {name: None for name in config.keys()}
         for section, conf_dcor in self._sections.items():
-            # Loosy breadth-first search for name.
-            objects.extend(conf_dcor._find_objects_named(name, skip_sections))
-        return objects
-
-    def _find_root(self):
-        if not self._parent:
-            return self
-        return self._parent._find_root()
-
-    def _find_setting(self, parts):
-        objects = self._find(parts, skip_sections=True)
-        if objects:
-            return objects[0]
-        return None
-
-    # ***
-
-    def forget_config_values(self):
-        def visitor(condec, keyval):
-            keyval.forget_config_value()
-        self._walk(visitor)
+            if section in config:
+                unsubsumed = conf_dcor.update_from_dict(config[section])
+                if not unsubsumed:
+                    del unconsumed[section]
+                else:
+                    unconsumed[section] = unsubsumed
+        for name, ckv in self._key_vals.items():
+            if ckv.ephemeral:
+                # Essentially unreachable, unless hacked config file.
+                continue
+            if name in config:
+                ckv.value = config[name]
+                del unconsumed[name]
+        return unconsumed
 
     # ***
-
-    # A @redecorator.
-    def section(self, name):
-        return section(name, parent=self)
-
-    def setting(self, message=None, **kwargs):
-        def decorator(func):
-            kwargs.setdefault('name', func.__name__)
-            doc = message
-            if doc is None:
-                doc = func.__doc__
-            ckv = KeyChainedValue(
-                default_f=func,
-                doc=doc,
-                # self is parent section; we'll set later.
-                section=None,
-                **kwargs
-            )
-            self._kv_cache[ckv.name] = ckv
-
-            # EXPLAIN/2019-11-30: (lb): Why not just `return func`?
-            def _decorator(*args, **kwargs):
-                return func(*args, **kwargs)
-            return update_wrapper(_decorator, func)
-        return decorator
 
     def setdefault(self, *args):
         # Here we quack like a duck (dict) and supply a smarty pants setdefault,
@@ -315,10 +245,66 @@ class ConfigDecorator(Subscriptable):
 
         return _setdefault()
 
+    # ***
+
+    def _find(self, parts, skip_sections=False):
+        # If caller specifies just one part, we'll do a loose, lazy match.
+        # Otherwise, if parts is more than just one entry, look for exact.
+        # - This supports use case of user being lazy, e.g., `dob get tz_aware`,
+        #   but also prevents problems being lazy-exact, e.g., `dob get abc xyz`
+        #   should be precise and return only abc.xyz, and not, say, zbc.def.xyz.
+
+        def _find_objects():
+            if not parts:
+                return [self]
+            elif len(parts) == 1:
+                objects = self._find_objects_named(parts[0], skip_sections)
+            else:
+                section_names = parts[:-1]
+                object_name = parts[-1]
+
+                conf_dcor = self
+                for name in section_names:
+                    # Raises KeyError if one of the sections not found.
+                    conf_dcor = conf_dcor._sections[name]
+
+                objects = []
+                if object_name in conf_dcor._sections and not skip_sections:
+                    objects.append(conf_dcor._sections[object_name])
+                if object_name in conf_dcor._key_vals:
+                    objects.append(conf_dcor._key_vals[object_name])
+
+            return objects
+
+        return _find_objects()
+
+    def _find_objects_named(self, name, skip_sections=False):
+        objects = []
+        if name in self._sections and not skip_sections:
+            # Exact section name match.
+            objects.append(self._sections[name])
+        if name in self._key_vals:
+            # Exact setting name match.
+            objects.append(self._key_vals[name])
+        for section, conf_dcor in self._sections.items():
+            # Loosy breadth-first search for name.
+            objects.extend(conf_dcor._find_objects_named(name, skip_sections))
+        return objects
+
+
+    def _find_setting(self, parts):
+        objects = self._find(parts, skip_sections=True)
+        if objects:
+            return objects[0]
+        return None
+
+    # ***
+
     def __getattr__(self, name):
         return self._find_one_object(name)
 
-    # ***
+    def __setitem__(self, name, value):
+        self._find_one_object(name).value = value
 
     def _find_one_object(self, name):
         parts = name.split('.')
@@ -342,8 +328,34 @@ class ConfigDecorator(Subscriptable):
             )
             return super(ConfigDecorator, self).__getattribute__(name)
 
-    def __setitem__(self, name, value):
-        self._find_one_object(name).value = value
+    # ***
+
+    # A @redecorator.
+    def section(self, name):
+        return section(name, parent=self)
+
+    def setting(self, message=None, **kwargs):
+        def decorator(func):
+            kwargs.setdefault('name', func.__name__)
+            doc = message
+            if doc is None:
+                doc = func.__doc__
+            ckv = KeyChainedValue(
+                default_f=func,
+                doc=doc,
+                # self is parent section; we'll set later.
+                section=None,
+                **kwargs
+            )
+            self._kv_cache[ckv.name] = ckv
+
+            # EXPLAIN/2019-11-30: (lb): Why not just `return func`?
+            def _decorator(*args, **kwargs):
+                return func(*args, **kwargs)
+            return update_wrapper(_decorator, func)
+        return decorator
+
+    # ***
 
 
 # Note that Python invokes the decorator with the item being decorated. If
