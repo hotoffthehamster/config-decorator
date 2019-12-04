@@ -104,6 +104,11 @@ class ConfigDecorator(Subscriptable):
                 del unconsumed[name]
         return unconsumed
 
+    def as_dict(self):
+        newd = {}
+        self.download_to_dict(newd)
+        return newd
+
     def download_to_dict(
         self, config, skip_unset=False, use_defaults=False, add_hidden=False,
     ):
