@@ -87,18 +87,22 @@ class ConfigDecorator(Subscriptable):
         parent._sections[self._name] = self
 
     def update_from_dict(self, config):
+        unconsumed = {name: None for name in config.keys()}
         for section, conf_dcor in self._sections.items():
             if section in config:
-                conf_dcor.update_from_dict(config[section])
+                unsubsumed = conf_dcor.update_from_dict(config[section])
+                if not unsubsumed:
+                    del unconsumed[section]
+                else:
+                    unconsumed[section] = unsubsumed
         for name, ckv in self._key_vals.items():
             if ckv.ephemeral:
                 # Essentially unreachable, unless hacked config file.
                 continue
             if name in config:
-                # NOTE/2019-11-27: (lb): This used to try-except and print
-                # dob_in_user_warning, but now we let it raise. Client's deal!
                 ckv.value = config[name]
-        return self
+                del unconsumed[name]
+        return unconsumed
 
     def download_to_dict(
         self, config, skip_unset=False, use_defaults=False, add_hidden=False,
