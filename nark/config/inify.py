@@ -40,7 +40,22 @@ class ConfigDecorator(Subscriptable):
     def __init__(self, cls, cls_or_name, parent=None):
         super(ConfigDecorator, self).__init__()
 
-        self._defaults = cls()
+        # We create and keep a handle to an instance of the decorated class,
+        # because the actual class the user defines (and decorates) will not
+        # become a first-class named entity by the Python parser. Instead, the
+        # decorator returns an object instance of this class, ConfigDecorator.
+        # E.g., in the snippet,
+        #   @section
+        #   class MyConfig(ConfigDecorator)
+        #       pass
+        #   obj = MyConfig
+        # you'll find that obj is a ConfigDecorator object, and it's not a
+        # reference to the MyConfig class. I.e., so you cannot call
+        #   # Won't work:
+        #   obj = MyConfig()
+        # but you can instead (via this attribute) call:
+        #   MyConfig._innerobj.foo
+        self._innerobj = cls()
 
         self._parent = parent
 
