@@ -82,7 +82,7 @@ requirements = [
     # https://pythonhosted.org/six/
     'six',
     # https://www.sqlalchemy.org/
-    # FIXME/2019-11-02: (lb): Migrate to SQLalchemy 1.3. Until then, stuck on 1.2.
+    # MAYBE/2019-11-02: (lb): Migrate to SQLalchemy 1.3. Until then, stuck on 1.2.
     # 'sqlalchemy',
     'sqlalchemy >= 1.2.19, < 1.3',
     # Database gooser/versioner.
