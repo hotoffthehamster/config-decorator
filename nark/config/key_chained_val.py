@@ -91,7 +91,7 @@ class KeyChainedValue(object):
             # So rather than a blind:
             #   return list
             # we gotta be smarter.
-            return lambda val: isinstance(val, list) and val or [val]
+            return self._typify_list
         elif isinstance(default_value, str):
             return str
         # We could default to, say, str, or we could nag user to either
@@ -134,6 +134,14 @@ class KeyChainedValue(object):
             elif value == 'False':
                 return False
         return self._value_type(value)
+
+    def _typify_list(self, value):
+        # Handle ConfigObj parsing a string without finding commas to
+        # split on, but the @setting indicating it's a list; or a
+        # default method returning [] so we avoid calling list([]).
+        if isinstance(value, list):
+            return value
+        return [value]
 
     def _walk(self, visitor):
         visitor(self._section, self)
