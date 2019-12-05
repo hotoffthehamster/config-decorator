@@ -171,7 +171,7 @@ class KeyChainedValue(object):
         except AttributeError:
             pass
         # Nothing found so far! Finally just return the default value.
-        return self.default
+        return self._typify(self.default)
 
     @value.setter
     def value(self, value):
