@@ -16,7 +16,7 @@
 
 graft nark
 
-# We could include specify filetypes, e.g.,
+# We could include specific files, e.g.,
 #   include docs/*.rst
 #   include docs/Makefile
 #   ...
