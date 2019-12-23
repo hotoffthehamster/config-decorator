@@ -291,7 +291,7 @@ class ConfigDecorator(Subscriptable):
 
     def items(self):
         # MAYBE/2019-11-30: (lb): What about self._sections??
-        return {k: v.value for k,v in self._key_vals.items()}
+        return {k: v.value for k, v in self._key_vals.items()}
 
     # ***
 
@@ -338,7 +338,6 @@ class ConfigDecorator(Subscriptable):
             # Loosy breadth-first search for name.
             objects.extend(conf_dcor._find_objects_named(name, skip_sections))
         return objects
-
 
     def _find_setting(self, parts):
         objects = self._find(parts, skip_sections=True)
