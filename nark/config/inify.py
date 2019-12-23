@@ -237,7 +237,7 @@ class ConfigDecorator(Subscriptable):
                 return
             raise TypeError(
                 _('setdefault expected at least 2 arguments, got {}')
-                .format(lens(args))
+                .format(len(args))
             )
 
         def _split_args_on_dot_sep(setting_value, possibly_dotted_names):
