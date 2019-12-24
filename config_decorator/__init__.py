@@ -27,3 +27,9 @@ storage container, such as ConfigObj, to add a capable,
 robust user configuration subsystem to any application.
 """
 
+from .config_decorator import section
+
+__all__ = (
+    'section',
+)
+
