@@ -45,8 +45,19 @@ User configuration framework developed for |dob|_.
 Overview
 ========
 
-Build elegant, self-documenting hierarchical user configuration
-easily using object classes and ``@decorated`` class methods.
+Build elegant, robust, and maintainable user configuration
+using common sense and ``@decorated`` class methods.
+
+The user configuration defines a collection of user-settable values and
+their defaults, and specifies type validation, value validation, user
+help, and more.
+
+An instantiated configuration object acts like a subscriptable ``dict``,
+making it easy to drop into existing code.
+
+The configuration can also be marshalled to or from a flat dictionary, making
+it easy to persist using an external package (for example, |ConfigObj|_,
+which reads and writes INI files to and from dictionaries).
 
 =======
 Example
@@ -126,19 +137,39 @@ E.g.,
     # The config object is subscriptable.
     assert(cfgroot['mood']['color'] == 'red')
 
+    # You can override defaults with user values.
     cfgroot['mood']['color'] = 'blue'
     assert(cfgroot['mood']['color'] == 'blue')
 
-    # The config object is attribute-aware.
+    # And you can always reset your values back to default.
+    assert(cfgroot.mood.color.default == 'red')
+    cfgroot._forget_config_values()
+    assert(cfgroot['mood']['color'] == 'red')
+
+    # The config object is attribute-aware (allows dot-notation).
     cfgroot.vibe.cleopatra.value = 100
+    # And list-type values intelligently convert atoms to lists.
     assert(cfgroot.vibe.cleopatra.value == [100])
 
-    # The config object is environ-aware.
+    # The config object is environ-aware, and prefers values it reads
+    # from the environment over those from a config file.
     import os
     from config_decorator.key_chained_val import KeyChainedValue
     KeyChainedValue._envvar_prefix = 'TEST_'
     os.environ['TEST_MOOD_VOLUME'] = '8'
     assert(cfgroot.mood.volume.value == 8)
+
+    # The config object can be flattened to a dict, which makes it easy
+    # to persist settings keys and values to disk using another package.
+    from configobj import ConfigObj
+    saved_cfg = ConfigObj('path/to/persisted/settings')
+    cfgroot.download_to_dict(saved_cfg)
+    saved_cfg.write()
+
+    # Likewise, values can be read from a dictionary, which makes loading
+    # them from a file saved to disk easy to do as well.
+    saved_cfg = ConfigObj('path/to/persisted/settings')
+    cfgroot._update_known(saved_cfg)
 
 ========
 Features
