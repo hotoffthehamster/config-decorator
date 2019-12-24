@@ -348,12 +348,14 @@ class ConfigDecorator(Subscriptable):
     # ***
 
     def __getattr__(self, name):
-        return self._find_one_object(name)
+        # See also:
+        #   return super(ConfigDecorator, self).__getattribute__(name)
+        return self._find_one_object(name, AttributeError)
 
     def __setitem__(self, name, value):
-        self._find_one_object(name).value = value
+        self._find_one_object(name, KeyError).value = value
 
-    def _find_one_object(self, name):
+    def _find_one_object(self, name, error_cls):
         parts = name.split('.')
         if len(parts) > 1:
             # User looked up, e.g., config['section1.section2....key'].
@@ -361,19 +363,19 @@ class ConfigDecorator(Subscriptable):
         else:
             objects = self._find_objects_named(name)
         if len(objects) > 1:
-            raise KeyError(
+
+            raise error_cls(
                 _('More than one config object named: “{}”').format(name)
             )
         if objects:
             return objects[0]
         else:
-            # DEV: This happens if you lookup at attr in config you didn't define.
-            raise KeyError(
-                _('Unrecognized config key: {}.__get__attr__(name="{}")').format(
+            # DEV: This happens if you lookup an attr in config you didn't define.
+            raise error_cls(
+                _('Unknown section for {}.__getattr__(name="{}")').format(
                     self.__class__.__name__, name,
                 )
             )
-            return super(ConfigDecorator, self).__getattribute__(name)
 
     # ***
 
@@ -398,6 +400,7 @@ class ConfigDecorator(Subscriptable):
 
             # EXPLAIN/2019-11-30: (lb): Why not just `return func`?
             def _decorator(*args, **kwargs):
+                # FIXME/2019-12-23: (lb): This might be unreachable code.
                 return func(*args, **kwargs)
             return update_wrapper(_decorator, func)
         return decorator

@@ -27,101 +27,199 @@ from config_decorator.config_decorator import ConfigDecorator
 from config_decorator.subscriptable import Subscriptable
 
 
+# ***
+
 class TestConfigDecoratorEmpty:
     # 2019-12-23: (lb): First test. 20% coverage.
     def test_empty_config(self):
         @section(None)
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
-        rootcfg = ConfigRoot
+        rootcfg = RootSection
         assert isinstance(rootcfg, ConfigDecorator)
         assert isinstance(rootcfg._innerobj, object)
 
+
+# ***
 
 class TestConfigDecoratorNamed:
     # 2019-12-23: (lb): Second test. 21% coverage.
     def test_named_config(self):
         @section('foo', parent=None)
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
-        rootcfg = ConfigRoot
+        rootcfg = RootSection
         assert isinstance(rootcfg, ConfigDecorator)
         assert isinstance(rootcfg._innerobj, object)
 
+
+# ***
 
 class TestConfigDecoratorNested:
     # 2019-12-23: (lb): Second test. 22% coverage.
 
     def test_nested_config(self):
         @section(None)
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
-        @ConfigRoot.section('foo')
+        @RootSection.section('foo')
         class NestedConfig(Subscriptable):
             pass
 
 
+
+# ***
 
 class TestConfigDecoratorOverlay:
     # 2019-12-23: (lb): Third test. 31% coverage.
 
     def test_section_overlay(self):
         @section(None)
-        class ConfigRoot(object):
+        class RootSection(object):
             def inner_function(self):
                 return 'bar'
 
-        @ConfigRoot.section(None)
-        class ConfigRootOverlay(Subscriptable):
+        @RootSection.section(None)
+        class RootSectionOverlay(Subscriptable):
             def __init__(self):
                 pass
 
             @property
-            @ConfigRoot.setting(
+            @RootSection.setting(
                 "Generated value.",
                 hidden=True,
             )
             def inner_function(self):
-                return ConfigRoot._innerobj.inner_function()
+                return RootSection._innerobj.inner_function()
 
+
+# ***
 
 class TestConfigDecoratorSameSectionRef:
     def test_same_section_ref(self):
         @section(None)
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
-        @ConfigRoot.section('foo')
-        class ConfigRootFoo1(Subscriptable):
+        @RootSection.section('foo')
+        class RootSectionFoo1(Subscriptable):
             def __init__(self):
                 pass
 
-        @ConfigRoot.section('foo')
-        class ConfigRootFoo2(Subscriptable):
+        @RootSection.section('foo')
+        class RootSectionFoo2(Subscriptable):
             def __init__(self):
                 pass
 
+
+# ***
 
 class TestConfigDecoratorPassive:
     def test_root_section_passive(self):
         @section
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
+
+# ***
 
 class TestSectionSettingDocstringDoc:
     def test_section_setting_implied_doc(self):
         @section(None)
-        class ConfigRoot(object):
+        class RootSection(object):
             pass
 
-        @ConfigRoot.section(None)
-        class ConfigRootReal(object):
+        @RootSection.section(None)
+        class RootSectionReal(object):
             @property
-            @ConfigRoot.setting()
+            @RootSection.setting()
             def foo(self):
                 '''The foo setting does bar.'''
+
+
+# ***
+
+def generate_config_root_unknown_type():
+    @section(None)
+    class RootSection(object):
+        pass
+
+    @RootSection.section(None)
+    class RootSectionReal(object):
+        @property
+        @RootSection.setting('test')
+        def foo(self):
+            # Default return value type will not be recognized.
+            return object()
+
+    return RootSection
+
+
+class TestSectionSettingDefaultUnknownType:
+    def test_section_method(self):
+        with pytest.raises(NotImplementedError):
+            rootcfg = generate_config_root_unknown_type()
+
+
+# ***
+
+def generate_config_root_unknown_bool_string():
+    @section(None)
+    class RootSection(object):
+        pass
+
+    @RootSection.section(None)
+    class RootSectionReal(object):
+        @property
+        @RootSection.setting(
+            "Validate bool string test, fail.",
+            value_type=bool,
+        )
+        def validate_bool_string_fail_test(self):
+            return 'Tralse'
+
+    return RootSection
+
+
+class TestSectionSettingDefaultUnknownBoolDefault:
+    def test_section_method(self):
+        rootcfg = generate_config_root_unknown_bool_string()
+        with pytest.raises(ValueError):
+            items = rootcfg.items()
+
+
+# ***
+
+def generate_config_root_fails_validation():
+    def fail_validation(value):
+        return False
+
+    @section(None)
+    class RootSection(object):
+        pass
+
+    @RootSection.section(None)
+    class RootSectionReal(object):
+        @property
+        @RootSection.setting(
+            "Validate fails test.",
+            validate=fail_validation,
+        )
+        def validate_bool_string_fail_test(self):
+            return None
+
+    return RootSection
+
+
+class TestSectionSettingValidationFail:
+    def test_section_method(self):
+        rootcfg = generate_config_root_fails_validation()
+        with pytest.raises(ValueError):
+            rootcfg.validate_bool_string_fail_test.value = 123
+
+
+
 

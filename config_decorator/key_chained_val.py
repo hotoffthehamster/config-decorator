@@ -28,6 +28,8 @@ __all__ = (
 
 
 class KeyChainedValue(object):
+    _envvar_prefix = ''
+
     def __init__(
         self,
         section=None,
@@ -117,6 +119,9 @@ class KeyChainedValue(object):
     def hidden(self):
         if callable(self._hidden):
             if self._section is None:
+                # FIXME/2019-12-23: (lb): I think this is unreachable,
+                # because self._section is only None when config is
+                # being built, but hidden not called during that time.
                 return False
             return self._hidden(self)
         return self._hidden
@@ -133,6 +138,12 @@ class KeyChainedValue(object):
                 return True
             elif value == 'False':
                 return False
+            else:
+                raise ValueError(
+                    _("Unrecognized string for bool setting ‘{}’: “{}”").format(
+                        self._name, value,
+                    ),
+                )
         return self._value_type(value)
 
     def _typify_list(self, value):
@@ -226,7 +237,8 @@ class KeyChainedValue(object):
 
     @property
     def value_from_envvar(self):
-        environame = 'DOB_{}_{}'.format(
+        environame = '{}{}_{}'.format(
+            KeyChainedValue._envvar_prefix,
             self._section._section_path(sep='_').upper(),
             self._name.upper(),
         )
