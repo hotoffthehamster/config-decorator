@@ -1,0 +1,28 @@
+# Building/Packaging/Distributing.
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Byte-compiled/Optimized Python and Library/DLL files.
+*.py[cod]
+__pycache__
+
+# Testing and CI tasks.
+.pytest_cache/
+.tox
+
+# `make coverage-html` output
+.coverage
+htmlcov/
+
+# pytest-cov / coverage / https://codecov.io
+coverage.xml
+
+# In lieu of a personalizable, secondary Grep/Silver Searcher/RipGrep ignore,
+# like .gitignore's .git/info/exclude, the repo contains an .ignore.example.
+.ignore
+
+# Translations
+*.mo
+
