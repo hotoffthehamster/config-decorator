@@ -16,7 +16,7 @@ codecov:
 # Specify the GitHub project directory path prefix so that clicking source
 # files in codecov.io opens the coverage browser.
 fixes:
-  - "::nark/"
+  - "::config_decorator/"
 
 coverage:
   # precision: 0 | 2

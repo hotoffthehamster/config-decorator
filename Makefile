@@ -97,7 +97,7 @@ develop:
 	pip install -U -e .
 
 lint:
-	flake8 setup.py nark/ tests/
+	flake8 setup.py config_decorator/ tests/
 
 test:
 	@echo "Use the PYTEST_ADDOPTS environment variable to add extra command line options."
@@ -139,15 +139,15 @@ quickfix:
 	sed -r "s#^(.* .*):([0-9]+):#\1∷\2:#" -i .make.out
 
 docs:
-	/bin/rm -f docs/nark.rst
+	/bin/rm -f docs/config_decorator.rst
 	/bin/rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ nark
+	sphinx-apidoc -o docs/ config_decorator
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(PYBROWSER) docs/_build/html/index.html
 
 isort:
-	isort --recursive setup.py nark/ tests/
+	isort --recursive setup.py config_decorator/ tests/
 	# DX: End files with blank line.
 	git ls-files | while read file; do \
 		if [ -n "$$(tail -n1 $$file)" ]; then \
@@ -180,7 +180,7 @@ cloc:
 ifndef CLOC
 	$(error "Please install cloc from: https://github.com/AlDanial/cloc")
 endif
-	@cloc --exclude-dir=.git,_build,nark.egg-info,.pytest_cache .
+	@cloc --exclude-dir=.git,_build,config_decorator.egg-info,.pytest_cache .
 
 # vim:tw=0:ts=2:sw=2:noet:ft=make:
 
