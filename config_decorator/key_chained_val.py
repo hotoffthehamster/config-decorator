@@ -134,7 +134,9 @@ class KeyChainedValue(object):
         if self._value_allow_none and value is None:
             return value
         if self._value_type is bool:
-            if value == 'True':
+            if isinstance(value, bool):
+                return value
+            elif value == 'True':
                 return True
             elif value == 'False':
                 return False
