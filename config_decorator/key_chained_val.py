@@ -381,7 +381,7 @@ class KeyChainedValue(object):
         """
         environame = '{}{}_{}'.format(
             KeyChainedValue._envvar_prefix,
-            self._section._section_path(sep='_').upper(),
+            self._section.section_path(sep='_').upper(),
             self._name.upper(),
         )
         envval = os.environ[environame]

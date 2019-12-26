@@ -209,7 +209,7 @@ class ConfigDecorator(object):
     ..              _pull_kv_cache
     ..              find_root
     ..              forget_config_values
-    .. automethod:: _section_path
+    ..              section_path
     .. automethod:: _walk
     ..              as_dict
     ..              download_to_dict
@@ -325,14 +325,14 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _section_path(self, parts=None, sep='_'):
+    def section_path(self, parts=None, sep='_'):
         if parts is None:
             parts = []
         # Ignore the root element. Start with its sections.
         if self._parent is None:
             return sep.join(parts)
         parts.insert(0, self._name)
-        return self._parent._section_path(parts, sep)
+        return self._parent.section_path(parts, sep)
 
     # ***
 
