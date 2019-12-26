@@ -1,24 +1,36 @@
-.. config-decorator documentation master file, created by
-   sphinx-quickstart on Tue Dec 24 23:15:25 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+##############################
+config-decorator Documentation
+##############################
 
-Welcome to config-decorator's documentation!
-============================================
+.. |dob| replace:: ``dob``
+.. _dob: https://github.com/hotoffthehamster/dob
+
+User configuration framework developed for |dob|_,
+but suitable for your next project!
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
-   API Reference <modules>
-..   Developer Credits <authors>
-..   Project History <history>
+   General Information <readme>
+   Package Interface <modules>
+   License <license>
 
-.. include:: ../README.rst
+.. Indices and tables
+.. ==================
+.. 
+.. The general index, an A-Z list of API keywords, is not
+.. super useful for this library, which is not very complicated.
+.. 
+..    * :ref:`genindex`
+.. 
+.. The module index is similar to the modules.rst TOC entry.
+.. 
+..    * :ref:`modindex`
+.. 
+.. There's a search in the left-hand sidebar, and in any case
+.. following the link to the `search` page shows no results,
+.. but also shows no search input control, so is useless.
+.. 
+..   * :ref:`search`
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

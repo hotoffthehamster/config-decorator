@@ -48,8 +48,8 @@ class Subscriptable(object):
             is returned instead.
 
             E.g., given a ``ConfigDecorator`` settings configuration,
-            you can call either ``cfg['foo']['bar'].value`` or more
-            simply ``cfg.foo.bar``.
+            you can call either ``cfg['foo']['bar']`` or more
+            simply ``cfg.foo.bar.value``.
 
         Args:
             name: Attribute name to lookup.

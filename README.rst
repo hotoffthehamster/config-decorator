@@ -45,7 +45,7 @@ User configuration framework developed for |dob|_.
 Overview
 ========
 
-config-decorator makes it easy to define a hierarchical
+``config-decorator`` makes it easy to define a hierarchical
 collection of user-configurable key-value settings using
 Pythonic ``@decorator`` syntax. It can be used with a modern
 file round tripper, such as |ConfigObj|_, to add a capable,
@@ -186,13 +186,16 @@ Features
   most important source is the value used. A setting value may come from
   the following sources, ordered from most important to least:
 
-  * A value read from command line arguments.
+  * A "forced" value set internally by the application.
 
-  * A value read from an environment variable.
+  * A "cliarg" value read from command line arguments.
 
-  * A value read from a user-supplied dictionary (e.g., from an INI file loaded by |ConfigObj|_).
+  * An "envvar" value read from an environment variable.
 
-  * A default value (the return value of the decorated method used to define the setting).
+  * A "config" value read from a user-supplied dictionary
+    (e.g., from an INI file loaded by |ConfigObj|_).
+
+  * A default value (determined by decorated method used to define the setting).
 
 * Each setting value is:
 
@@ -200,17 +203,22 @@ Features
 
   * optionally validated, possibly against a user-supplied *choices* list;
 
-  * always documented, either by the first decorator argument, or from the method ``'''docstring'''``;
+  * always documented, either by the first decorator argument,
+    or from the decorated method ``'''docstring'''``;
 
-  * sometimes hidden (e.g., for developer-only or experimental settings, to keep the user from seeing);
+  * sometimes hidden (e.g., for developer-only or experimental settings,
+    to keep the user from seeing the setting unless its value differs
+    from the default value);
 
-  * sometimes ephemeral, or not saved (e.g., for values based on other settings value that must be generated at runtime, after all value sources are loaded).
+  * sometimes ephemeral, or not saved (e.g., for values based on other
+    values that must be generated at runtime, after all value sources
+    are loaded).
 
-============
-Keep Digging
-============
+=======
+Explore
+=======
 
 * For complete usage examples, see this project's ``tests/``.
 
-* Better yet, for a real-world usage example, see |nark|_'s ``ConfigRoot`` and related.
+* For a real-world usage example, see |nark|_'s ``ConfigRoot`` and related.
 
