@@ -339,7 +339,7 @@ class TestConfigDecoratorFindRoot:
 class TestConfigDecoratorForgetfulWalk:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg._forget_config_values()
+        rootcfg.forget_config_values()
 
 
 # ***

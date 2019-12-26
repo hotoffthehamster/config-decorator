@@ -202,10 +202,13 @@ class ConfigDecorator(object):
         _name: The section name, specified in the decorator,
                or inferred from the class name.
 
-    .. Use `automethod` to document private functions (include in docs/_build).
-    .. is-private   _pull_kv_cache
+    .. DEV: Use `automethod` to document private functions (include them in docs/_build).
+    ..
+    .. E.g., `automethod:: _my_method_name`
+
+    ..              _pull_kv_cache
     ..              find_root
-    .. automethod:: _forget_config_values
+    ..              forget_config_values
     .. automethod:: _section_path
     .. automethod:: _walk
     ..              as_dict
@@ -276,7 +279,14 @@ class ConfigDecorator(object):
     # ***
 
     def _pull_kv_cache(self, parent):
-        """
+        """Consumes the accumulated settings cache from the parent section.
+
+        Because the decorator is not called until after the class it
+        decorates is defined, and because we want the user to be able
+        to decorate the methods within the class being decorated, the
+        method decorates must register the settings with the parent section
+        instead. Then, when the decorated is called once the class is defined,
+        we snatch the settings back from the parent's cache.
         """
         if parent is None:
             return
@@ -302,7 +312,13 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _forget_config_values(self):
+    def forget_config_values(self):
+        """Visits every setting and removes the value from the "config" source.
+
+        Unless a setting's value can be gleaned from an environment variable,
+        or was parsed from the command line, or was forceable set by the code,
+        calling this method will effectively set the value back to its default.
+        """
         def visitor(condec, keyval):
             keyval.forget_config_value()
         self._walk(visitor)

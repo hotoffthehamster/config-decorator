@@ -149,7 +149,7 @@ E.g.,
 
     # And you can always reset your values back to default.
     assert(cfgroot.mood.color.default == 'red')
-    cfgroot._forget_config_values()
+    cfgroot.forget_config_values()
     assert(cfgroot['mood']['color'] == 'red')
 
     # The config object is attribute-aware (allows dot-notation).
