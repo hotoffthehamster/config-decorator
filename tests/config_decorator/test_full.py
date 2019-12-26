@@ -305,21 +305,21 @@ class TestConfigDecoratorSubscriptability:
 class TestConfigDecoratorFind:
     def test_something(self):
         rootcfg = generate_config_root()
-        settings = rootcfg._find(['level1', 'level2', 'baz'])
+        settings = rootcfg.find_all(['level1', 'level2', 'baz'])
         assert(settings[0].value == 'bat')
 
 
 class TestConfigDecoratorFindSelf:
     def test_something(self):
         rootcfg = generate_config_root()
-        settings = rootcfg._find(parts=[])
+        settings = rootcfg.find_all(parts=[])
         assert(settings == [rootcfg])
 
 
 class TestConfigDecoratorFindSection:
     def test_something(self):
         rootcfg = generate_config_root()
-        settings = rootcfg._find(parts=['level1', 'level2'])
+        settings = rootcfg.find_all(parts=['level1', 'level2'])
         assert(len(settings) == 1)
         assert(settings[0] is rootcfg['level1']['level2'])
 

@@ -573,7 +573,28 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _find(self, parts, skip_sections=False):
+    def find_all(self, parts, skip_sections=False):
+        """Returns all matching sections or settings.
+
+        Args:
+            parts: A list of strings used to find matching sections and settings.
+
+                   - If empty, the currect section is returned (the identify function).
+
+                   - If just one name is specified in "parts", all sections and
+                     settings that match that name are assembled and returned
+                     (by performing a breadth-first search of the current section
+                     and its subsections).
+
+                   - If more than one name is specified, the leading names are used to
+                     form the path to the section to search; and then any section or
+                     setting in that section matching the final name in "parts" is returned.
+
+            skip_sections: If True, do not include section objects in the results.
+
+        Returns:
+            A list of matching sections and settings.
+        """
         # If caller specifies just one part, we'll do a loose, lazy match.
         # Otherwise, if parts is more than just one entry, look for exact.
         # - This supports use case of user being lazy, e.g., `dob get tz_aware`,
@@ -626,7 +647,7 @@ class ConfigDecorator(object):
         Returns:
             The indentified setting, or None if no setting found.
         """
-        objects = self._find(parts, skip_sections=True)
+        objects = self.find_all(parts, skip_sections=True)
         if objects:
             return objects[0]
         return None
@@ -694,7 +715,7 @@ class ConfigDecorator(object):
         parts = name.split(self.SEP)
         if len(parts) > 1:
             # User looked up, e.g., config['section1.section2....key'].
-            objects = self._find(parts)
+            objects = self.find_all(parts)
         else:
             objects = self._find_objects_named(name)
         if len(objects) > 1:
