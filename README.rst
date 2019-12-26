@@ -3,7 +3,7 @@ config-decorator User Options Framework
 #######################################
 .. config-decorator Documentation
 
-.. image:: https://travis-ci.com/hotoffthehamster/config-decorator.svg?branch=master
+.. image:: https://api.travis-ci.com/hotoffthehamster/config-decorator.svg?branch=master
   :target: https://travis-ci.com/hotoffthehamster/config-decorator
   :alt: Build Status
 
@@ -15,7 +15,7 @@ config-decorator User Options Framework
   :target: https://config-decorator.readthedocs.io/en/latest/
   :alt: Documentation Status
 
-.. image:: https://img.shields.io/github/release/hotoffthehamster/config-decorator.svg?style=flat
+.. image:: https://img.shields.io/github/v/release/hotoffthehamster/config-decorator.svg?style=flat
   :target: https://github.com/hotoffthehamster/config-decorator/releases
   :alt: GitHub Release Status
 
