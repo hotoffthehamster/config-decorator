@@ -21,13 +21,14 @@ config-decorator
 ~~~~~~~~~~~~~~~~
 
 config-decorator makes it easy to define a hierarchical
-collection of user configurable key-value settings using
+collection of user-configurable key-value settings using
 Pythonic @decorator syntax. It can be used with a modern
 storage container, such as ConfigObj, to add a capable,
 robust user configuration subsystem to any application.
 """
 
 from .config_decorator import section
+'''A convenience pointer.'''
 
 __all__ = (
     'section',
