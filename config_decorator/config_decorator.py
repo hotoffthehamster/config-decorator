@@ -203,8 +203,8 @@ class ConfigDecorator(object):
                or inferred from the class name.
 
     .. Use `automethod` to document private functions (include in docs/_build).
-    .. automethod:: _pull_kv_cache
-    .. automethod:: _find_root
+    .. is-private   _pull_kv_cache
+    ..              find_root
     .. automethod:: _forget_config_values
     .. automethod:: _section_path
     .. automethod:: _walk
@@ -220,7 +220,8 @@ class ConfigDecorator(object):
     .. automethod:: _find
     .. automethod:: _find_objects_named
     .. automethod:: _find_setting
-    .. automethod:: __getattr__
+    ..              asobj
+    .. automethod:: __getitem__
     .. automethod:: __setitem__
     .. automethod:: _find_one_object
     ..              section
@@ -228,6 +229,7 @@ class ConfigDecorator(object):
     """
 
     SEP = '.'
+    """Separator character used to (un)flatten section.subsection.settings paths."""
 
     def __init__(self, cls, cls_or_name, parent=None):
         """Inits ConfigDecorator with class being decorated, section name, and optional parent reference.
