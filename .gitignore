@@ -26,3 +26,5 @@ coverage.xml
 # Translations
 *.mo
 
+docs/_build
+
