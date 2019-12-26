@@ -498,7 +498,7 @@ class ConfigDecorator(object):
 
         def _setdefault():
             must_args_two_or_more()
-            split_args_on_dot_sep(args[-1], args[:-1])
+            return split_args_on_dot_sep(args[-1], args[:-1])
 
         def must_args_two_or_more():
             if len(args) > 1:
