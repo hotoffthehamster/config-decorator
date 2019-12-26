@@ -15,7 +15,113 @@
 #
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
-'''Pythonic @decorator syntax for defining robust user config'''
+"""Class @decorator for defining exquisite settings configurations.
+
+Concepts
+--------
+
+A configurable setting is some value in an application that can be
+"globally" set.
+
+Most often, a configurable setting is used so that an end user can
+change the behavior of an application. All settings might be saved
+to a file on disk and read whenever the application starts. In this
+case, the collection of configurable settings might simply be called
+the "user options".
+
+But you could also use configurable settings to decouple code. For
+example, rather than two objects sharing values by interacting with
+one another, they could instead share values using a common settings
+configuration. Then the two objects only need to know common key names,
+and not about each other.
+
+At its core, each setting has a name (its key), and a value. The value could
+be a default value specified in code, or it could be a value somehow specified
+by the user, such as from the command line, or from an environment variable,
+or from a file saved on disk.
+
+Furthermore, each setting has a description (some helpful text),
+a type (int, bool, list, etc.),
+an optional validation function,
+and other qualities
+(see more in the ``key_chained_val`` module).
+
+Multiple settings can be organized into
+hierarchically-related groups, or sections
+(as represented by the ``ConfigDecorator`` class,
+but generated using the ``@section`` decorator).
+
+In addition to settings, each section may also contain sections
+(or, more aptly, *subsections*).
+
+You can think of the complete hierarchical collection of sections and
+their settings as a *settings configuration*, or as the *user options*.
+
+Each section of a settings configuration is represented by a
+``ConfigDecorator`` instance. The settings themselves are
+each represented by a ``KeyChainedVal`` instance.
+
+Typical usage
+-------------
+
+To create a settings configuration, use the ``@section`` decorator
+once to designate the root object of the settings configuration.
+The decorated class is then used to decorate the subsection classes
+and the settings methods. (And then the subsection classes can be
+used to decorate sub-subsections and their settings, and so on.)
+
+For example,::
+
+    def generate_config(self):
+        '''An example setting configuration generator.'''
+
+        @section(None)
+        class RootSection(object):
+            pass
+
+        @RootSection.section('foo')
+        class RootSectionFoo(Subscriptable):
+            def __init__(self):
+                pass
+
+        @RootSection.section('bar')
+        class RootSectionBar(Subscriptable):
+            def __init__(self):
+                pass
+
+        @RootSectionBar.section('baz')
+        class BarSubsectionBaz(Subscriptable):
+            def __init__(self):
+                pass
+
+            @property
+            @RootSectionBar.setting(
+                "An example setting.",
+            )
+            def bat(self):
+                return 'Ta-Da!'
+
+        return RootSection
+
+In the example above, there are two root sections defined, "foo" and "bar",
+one there's one setting defined in the "bar.baz" subsection. You could run,
+e.g.,::
+
+    >>> cfg = generate_config()
+    >>> cfg.bar.baz.bat
+    'Ta-Da!'
+
+Note that because of how decorators operate on a class (they execute
+after the class is defined), the settings defined in a class definition
+must be decoratored using that class's parent section. (In the previous
+example, ``@RootSectionBar.setting`` was used inside ``BarSubsectionBaz``.)
+
+CAVEAT: You cannot access the decorated user class as a normal class!
+- The ``@section`` decorator wraps the user's class in a
+``ConfigDecorator`` instance, and it returns that object.
+- So in the previous example, ``RootSection`` is an instance of ``ConfigDecorator``
+and not a ``class`` object (i.e., you cannot call ``obj = RootSection()``).
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -30,12 +136,33 @@ from .subscriptable import Subscriptable
 
 __all__ = (
     'section',
-    # PRIVATE:
-    # 'ConfigDecorator',
+    # (lb): The ConfigDecorator is technically private, because the user
+    # calls @section() and doesn't make ConfigDecorator objects directly.
+    # However, not including the class in __all__ excludes it from docs/, too.
+    'ConfigDecorator',
 )
 
 
+# FIXME/2019-12-25 19:46: Remove Subscriptable; add __getitem__ that access innerkeys or whatever...
 class ConfigDecorator(Subscriptable):
+    """Represents a section of a hierarchical user configuration.
+
+    The user configuration is a collection of user-settable key-value
+    settings grouped and organized into a tree-like graph of sections.
+
+    The user configuration has one root section, which may have any number
+    of subsections and settings therein. Each subsection may also contain
+    any number of subsections and settings.
+
+    The ConfigDecorator works by wrapping a decorated user class to build
+    the user configuration. As such, object creation is handled by the
+    ``@section`` decorator. Users of this library will not call ConfigDecorator()
+    directly.
+
+    Attributes:
+        _innerobj: The user's class being decorated. Because of @section decorator returns the instance of the new ConfigDecorator.
+    """
+
     def __init__(self, cls, cls_or_name, parent=None):
         super(ConfigDecorator, self).__init__()
 
