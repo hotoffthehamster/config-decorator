@@ -1,6 +1,7 @@
-#########################################
-*config-decorator* user options framework
-#########################################
+#######################################
+config-decorator User Options Framework
+#######################################
+.. config-decorator Documentation
 
 .. image:: https://travis-ci.com/hotoffthehamster/config-decorator.svg?branch=develop
   :target: https://travis-ci.com/hotoffthehamster/config-decorator
@@ -70,7 +71,7 @@ robust user configuration subsystem to any application.
 Example
 =======
 
-E.g.,
+Here's a simple example:
 
 .. code-block:: Python
 

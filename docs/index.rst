@@ -10,11 +10,11 @@ but suitable for your next project!
 
 .. toctree::
    :maxdepth: 4
-   :caption: Contents:
+   :caption: Package Documentation
 
    General Information <readme>
    Package Interface <modules>
-   License <license>
+   Software License <license>
 
 .. Indices and tables
 .. ==================
@@ -30,7 +30,7 @@ but suitable for your next project!
 .. 
 .. There's a search in the left-hand sidebar, and in any case
 .. following the link to the `search` page shows no results,
-.. but also shows no search input control, so is useless.
+.. but also shows no search input control, so this is useless.
 .. 
 ..   * :ref:`search`
 

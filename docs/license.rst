@@ -3,11 +3,9 @@ LICENSE
 #######
 
 ``config-decorator`` is
-copyright © 2019 Landon Bouma. All rights reserved.
+copyright © 2019 Landon Bouma, HotOffThe Hamster, & contributors. All rights reserved.
 
-The ``config-decorator`` project
-(the source code and this help documentation)
-is free software:
+The ``config-decorator`` source code is free software:
 you can redistribute it and/or modify it
 under the terms of the :download:`GNU Affero General Public License <../LICENSE>`
 as published by the Free Software Foundation (and reprinted below),

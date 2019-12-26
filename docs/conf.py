@@ -80,7 +80,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'config-decorator'
-copyright = '2019, Landon Bouma'
+copyright = 'Landon Bouma, HotOffThe Hamster, & contributors.'
 author = 'Landon Bouma'
 
 # (lb): Using setuptools_scm magic, per
