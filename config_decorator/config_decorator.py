@@ -227,6 +227,8 @@ class ConfigDecorator(object):
     ..              setting
     """
 
+    SEP = '.'
+
     def __init__(self, cls, cls_or_name, parent=None):
         """Inits ConfigDecorator with class being decorated, section name, and optional parent reference.
         """
@@ -442,7 +444,7 @@ class ConfigDecorator(object):
         def split_args_on_dot_sep(setting_value, possibly_dotted_names):
             part_names = []
             for name in possibly_dotted_names:
-                part_names.extend(name.split('.'))
+                part_names.extend(name.split(self.SEP))
             setting_name = part_names[-1]
             section_names = part_names[:-1]
             return setsetting(setting_name, setting_value, *section_names)
@@ -580,14 +582,13 @@ class ConfigDecorator(object):
         self._find_one_object(name, KeyError).value = value
 
     def _find_one_object(self, name, error_cls):
-        parts = name.split('.')
+        parts = name.split(self.SEP)
         if len(parts) > 1:
             # User looked up, e.g., config['section1.section2....key'].
             objects = self._find(parts)
         else:
             objects = self._find_objects_named(name)
         if len(objects) > 1:
-
             raise error_cls(
                 _('More than one config object named: “{}”').format(name)
             )
