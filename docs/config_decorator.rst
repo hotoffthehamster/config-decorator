@@ -20,14 +20,6 @@ config\_decorator.key\_chained\_val module
    :undoc-members:
    :show-inheritance:
 
-config\_decorator.subscriptable module
---------------------------------------
-
-.. automodule:: config_decorator.subscriptable
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 
 Module contents
 ---------------

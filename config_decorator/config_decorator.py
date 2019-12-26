@@ -80,17 +80,17 @@ For example::
             pass
 
         @RootSection.section('foo')
-        class RootSectionFoo(Subscriptable):
+        class RootSectionFoo(object):
             def __init__(self):
                 pass
 
         @RootSection.section('bar')
-        class RootSectionBar(Subscriptable):
+        class RootSectionBar(object):
             def __init__(self):
                 pass
 
         @RootSectionBar.section('baz')
-        class BarSubsectionBaz(Subscriptable):
+        class BarSubsectionBaz(object):
             def __init__(self):
                 pass
 
@@ -138,7 +138,6 @@ from functools import update_wrapper
 from gettext import gettext as _
 
 from .key_chained_val import KeyChainedValue
-from .subscriptable import Subscriptable
 
 __all__ = (
     # So that the Sphinx docs do not generate help on the `section`
@@ -152,8 +151,7 @@ __all__ = (
 )
 
 
-# FIXME/2019-12-25 19:46: Remove Subscriptable; add __getitem__ that access innerkeys or whatever...
-class ConfigDecorator(Subscriptable):
+class ConfigDecorator(object):
     """Represents one section of a hierarchical settings configuration.
 
     A settings configuration is a collection of user-settable key-value
@@ -472,7 +470,7 @@ class ConfigDecorator(Subscriptable):
                 # but also by a setdefault, for whyever. (To
                 # appease Nark, so it can treat ConfigDecorator
                 # like dict of dicts.)
-                cls = Subscriptable
+                cls = object
                 cls_or_name = section_name
                 sub_dcor = ConfigDecorator(cls, cls_or_name, parent=conf_dcor)
                 conf_dcor._sections[section_name] = sub_dcor
@@ -548,10 +546,35 @@ class ConfigDecorator(Subscriptable):
 
     # ***
 
-    def __getattr__(self, name):
-        # See also:
-        #   return super(ConfigDecorator, self).__getattribute__(name)
-        return self._find_one_object(name, AttributeError)
+    def __getitem__(self, name):
+        """Returns the section or setting with the given name.
+
+        Makes an otherwise non-subscriptable object subscriptable.
+
+           I.e., calling ``obj['key']`` maps to ``obj.key``.
+
+           Or, put another way, the user can access data at *obj['key']* as well as *obj.key*.
+
+        .. Note::
+
+            If the derived class has a ``value`` attribute, that attribute
+            is returned instead.
+
+            E.g., given a ``ConfigDecorator`` settings configuration,
+            you can call either ``cfg['foo']['bar']`` or more
+            simply ``cfg.foo.bar.value``.
+
+        Args:
+            name: Attribute name to lookup.
+
+        Raise:
+            AttributeError
+        """
+        item = self._find_one_object(name, AttributeError)
+        try:
+            return item.value
+        except AttributeError:
+            return item
 
     def __setitem__(self, name, value):
         self._find_one_object(name, KeyError).value = value
@@ -684,11 +707,11 @@ def section(cls_or_name, parent=None):
             # So that two different modules can build the same config,
             #   e.g., in project/myfile1:
             #     @ConfigRoot.section('shared')
-            #     class ConfigurableA(Subscriptable):
+            #     class ConfigurableA(object):
             #         ...
             #   then in project/myfile2:
             #     @ConfigRoot.section('shared')
-            #     class ConfigurableB(Subscriptable):
+            #     class ConfigurableB(object):
             #         ...
             # and also for the reasons listed in the long previous comment,
             # return the named section if previously defined.

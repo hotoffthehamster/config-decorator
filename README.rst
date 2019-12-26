@@ -77,7 +77,6 @@ E.g.,
     #!/usr/bin/env python3
 
     from config_decorator import section
-    from config_decorator.subscriptable import Subscriptable
 
     def generate_config():
 
@@ -88,7 +87,7 @@ E.g.,
 
 
         @ConfigRoot.section('mood')
-        class ConfigSection(Subscriptable):
+        class ConfigSection(object):
             '''Use the root settings section decorator to define setting groups.'''
 
             @property
@@ -108,7 +107,7 @@ E.g.,
                 return 11
 
         @ConfigRoot.section('vibe')
-        class ConfigSection(Subscriptable):
+        class ConfigSection(object):
             '''Another settings section.'''
 
             @property

@@ -24,7 +24,6 @@ import pytest
 
 from config_decorator import section
 from config_decorator.config_decorator import ConfigDecorator
-from config_decorator.subscriptable import Subscriptable
 
 
 # ***
@@ -66,7 +65,7 @@ class TestConfigDecoratorNested:
             pass
 
         @RootSection.section('foo')
-        class NestedConfig(Subscriptable):
+        class NestedConfig(object):
             pass
 
 
@@ -83,7 +82,7 @@ class TestConfigDecoratorOverlay:
                 return 'bar'
 
         @RootSection.section(None)
-        class RootSectionOverlay(Subscriptable):
+        class RootSectionOverlay(object):
             def __init__(self):
                 pass
 
@@ -105,12 +104,12 @@ class TestConfigDecoratorSameSectionRef:
             pass
 
         @RootSection.section('foo')
-        class RootSectionFoo1(Subscriptable):
+        class RootSectionFoo1(object):
             def __init__(self):
                 pass
 
         @RootSection.section('foo')
-        class RootSectionFoo2(Subscriptable):
+        class RootSectionFoo2(object):
             def __init__(self):
                 pass
 

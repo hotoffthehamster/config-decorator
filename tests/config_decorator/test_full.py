@@ -26,7 +26,6 @@ import pytest
 
 from config_decorator import section
 from config_decorator.config_decorator import ConfigDecorator
-from config_decorator.subscriptable import Subscriptable
 
 
 def generate_config_root():
@@ -39,7 +38,7 @@ def generate_config_root():
     # ***
 
     @RootSection.section(None)
-    class RootSectionOverlay(Subscriptable):
+    class RootSectionOverlay(object):
         def __init__(self):
             pass
 
@@ -194,7 +193,7 @@ def generate_config_root():
     # ***
 
     @RootSection.section('level1')
-    class RootSectionLevel1(Subscriptable):
+    class RootSectionLevel1(object):
         def __init__(self):
             pass
 
@@ -215,7 +214,7 @@ def generate_config_root():
     # ***
 
     @RootSectionLevel1.section('level2')
-    class RootSectionLevel2(Subscriptable):
+    class RootSectionLevel2(object):
         def __init__(self):
             pass
 
@@ -236,7 +235,7 @@ def generate_config_root():
     # ***
 
     @RootSection.section('level1.2')
-    class RootSectionLevel1dot2TestsDownloadToDictDelConfigSection(Subscriptable):
+    class RootSectionLevel1dot2TestsDownloadToDictDelConfigSection(object):
         def __init__(self):
             pass
 
