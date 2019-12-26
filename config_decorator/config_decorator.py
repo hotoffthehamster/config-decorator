@@ -430,10 +430,10 @@ class ConfigDecorator(Subscriptable):
         # and setdefault will descend one or more sections to find the setting.
 
         def _setdefault():
-            _must_args_two_or_more()
-            _split_args_on_dot_sep(args[-1], args[:-1])
+            must_args_two_or_more()
+            split_args_on_dot_sep(args[-1], args[:-1])
 
-        def _must_args_two_or_more():
+        def must_args_two_or_more():
             if len(args) > 1:
                 return
             raise TypeError(
@@ -441,18 +441,18 @@ class ConfigDecorator(Subscriptable):
                 .format(len(args))
             )
 
-        def _split_args_on_dot_sep(setting_value, possibly_dotted_names):
+        def split_args_on_dot_sep(setting_value, possibly_dotted_names):
             part_names = []
             for name in possibly_dotted_names:
                 part_names.extend(name.split('.'))
             setting_name = part_names[-1]
             section_names = part_names[:-1]
-            return _setsetting(setting_name, setting_value, *section_names)
+            return setsetting(setting_name, setting_value, *section_names)
 
-        def _setsetting(setting_name, setting_value, *section_names):
+        def setsetting(setting_name, setting_value, *section_names):
             conf_dcor = self
             for section_name in section_names:
-                conf_dcor = _getsection(conf_dcor, section_name)
+                conf_dcor = getsection(conf_dcor, section_name)
             if setting_name in conf_dcor._key_vals:
                 return conf_dcor._key_vals[setting_name]
             ckv = KeyChainedValue(
@@ -464,7 +464,7 @@ class ConfigDecorator(Subscriptable):
             self._key_vals[ckv.name] = ckv
             return setting_value
 
-        def _getsection(conf_dcor, section_name):
+        def getsection(conf_dcor, section_name):
             try:
                 sub_dcor = conf_dcor._sections[section_name]
             except KeyError:
