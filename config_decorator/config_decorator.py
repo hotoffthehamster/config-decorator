@@ -325,9 +325,11 @@ class ConfigDecorator(object):
 
     # ***
 
-    def section_path(self, parts=None, sep='_'):
+    def section_path(self, parts=None, sep=None):
         if parts is None:
             parts = []
+        if sep is None:
+            sep = self.SEP
         # Ignore the root element. Start with its sections.
         if self._parent is None:
             return sep.join(parts)
