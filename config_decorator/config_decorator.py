@@ -214,7 +214,7 @@ class ConfigDecorator(object):
     ..              as_dict
     ..              download_to_dict
     ..              update_known
-    .. automethod:: _update_gross
+    ..              update_gross
     ..              update
     ..              setdefault
     ..              keys
@@ -410,7 +410,7 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _update_gross(self, other):
+    def update_gross(self, other):
         # See also, update_known, which does not add unknown values.
         # This method grabs everything from `other` and shoves it in this
         # ConfigDecorator object. You might find this useful if your app
@@ -436,11 +436,11 @@ class ConfigDecorator(object):
 
     # (lb): We have some dict-ish methods, like setdefault, and keys, values,
     # and items, so might as well have an update method, too. But update is
-    # just a shim to _update_gross, so that you're aware there's also the
-    # similar method, update_known. update calls _update_gross, which is
+    # just a shim to update_gross, so that you're aware there's also the
+    # similar method, update_known. update calls update_gross, which is
     # more like the actual dict.update() method than update_known.
     def update(self, other):
-        self._update_gross(other)
+        self.update_gross(other)
 
     # ***
 
