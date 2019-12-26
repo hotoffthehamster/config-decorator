@@ -7,7 +7,7 @@ config-decorator User Options Framework
   :target: https://travis-ci.com/hotoffthehamster/config-decorator
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/hotoffthehamster/config-decorator/branch/develop/graph/badge.svg
+.. image:: https://codecov.io/gh/hotoffthehamster/config-decorator/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/hotoffthehamster/config-decorator
   :alt: Coverage Status
 
