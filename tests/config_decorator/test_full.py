@@ -302,14 +302,14 @@ class TestConfigDecoratorSubscriptability:
 
 # ***
 
-class TestConfigDecoratorFind:
+class TestConfigDecoratorFindAllManyParts:
     def test_something(self):
         rootcfg = generate_config_root()
         settings = rootcfg.find_all(['level1', 'level2', 'baz'])
         assert(settings[0].value == 'bat')
 
 
-class TestConfigDecoratorFindSelf:
+class TestConfigDecoratorFindAllNoPartsSelf:
     def test_something(self):
         rootcfg = generate_config_root()
         settings = rootcfg.find_all(parts=[])
@@ -332,6 +332,15 @@ class TestConfigDecoratorFindRoot:
         assert(rootcfg['level1'].find_root() is rootcfg)
         rootcfg = generate_config_root()
         assert(rootcfg['level1'].asobj.foo.find_root() is rootcfg)
+
+
+# ***
+
+class TestConfigDecoratorSectionPath:
+    def test_something(self):
+        rootcfg = generate_config_root()
+        assert(rootcfg.asobj.level1.level2._.section_path() == 'level1.level2')
+        assert(rootcfg.asobj.level1.level2._.section_path('_') == 'level1_level2')
 
 
 # ***
