@@ -53,7 +53,13 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    # Google style docstrings
+    # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+    # https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
+    # https://google.github.io/styleguide/pyguide.html#383-functions-and-methods
+    'sphinx.ext.napoleon'
 ]
+
 
 # Prevent non local immage warnings from showing.
 suppress_warnings = ['image.nonlocal_uri']
