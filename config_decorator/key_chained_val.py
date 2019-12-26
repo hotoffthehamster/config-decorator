@@ -183,8 +183,12 @@ class KeyChainedValue(object):
             return self._ephemeral(self)
         return self._ephemeral
 
-    def _find_root(self):
-        return self._section._find_root()
+    def find_root(self):
+        """Returns the topmost section object."""
+        # (lb): This function probably not useful, but offered as parity
+        # to what's in ConfigDecorator. And who knows, maybe a developer
+        # will find useful from a debug prompt.
+        return self._section.find_root()
 
     @property
     def hidden(self):

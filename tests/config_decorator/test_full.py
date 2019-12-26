@@ -329,9 +329,9 @@ class TestConfigDecoratorFindSection:
 class TestConfigDecoratorFindRoot:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg['level1']._find_root() is rootcfg)
+        assert(rootcfg['level1'].find_root() is rootcfg)
         rootcfg = generate_config_root()
-        assert(rootcfg['level1'].asobj.foo._find_root() is rootcfg)
+        assert(rootcfg['level1'].asobj.foo.find_root() is rootcfg)
 
 
 # ***

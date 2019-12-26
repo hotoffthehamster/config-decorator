@@ -294,10 +294,11 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _find_root(self):
+    def find_root(self):
+        """Returns the topmost section object, that which has no parent."""
         if not self._parent:
             return self
-        return self._parent._find_root()
+        return self._parent.find_root()
 
     # ***
 
