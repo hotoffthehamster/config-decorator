@@ -116,7 +116,7 @@ class KeyChainedValue(object):
         self._hidden = hidden
         self._validate_f = validate
 
-        self._value_type = self.deduce_value_type(value_type)
+        self._value_type = self._deduce_value_type(value_type)
         self._value_allow_none = allow_none
 
         # These attributes will only be set if some particular
@@ -138,14 +138,14 @@ class KeyChainedValue(object):
         """
         return self._default_f(self._section)
 
-    def deduce_value_type(self, value_type=None):
+    def _deduce_value_type(self, value_type=None):
         if value_type is not None:
             return value_type
         elif self.ephemeral:
             return lambda val: val
-        return self.deduce_default_type()
+        return self._deduce_default_type()
 
-    def deduce_default_type(self):
+    def _deduce_default_type(self):
         default_value = self.default
         if default_value is None:
             return lambda val: val
@@ -289,7 +289,15 @@ class KeyChainedValue(object):
 
     @value.setter
     def value(self, value):
-        value = self.value_cast_and_validate(value)
+        """Sets the setting value to the value supplied.
+
+        Args:
+            value: The new setting value.
+                   The value is assumed to be from the config,
+                   i.e., this method is an alias to
+                   the :meth:`value_from_config` setter.
+        """
+        value = self._value_cast_and_validate(value)
         # Using the `value =` shortcut, or using `section['key'] = `,
         # is provided as a convenient way to inject values from the
         # config file, or that the user wishes to set in the file.
@@ -297,7 +305,7 @@ class KeyChainedValue(object):
         # setting self.value_from_forced instead.
         self.value_from_config = value
 
-    def value_cast_and_validate(self, value):
+    def _value_cast_and_validate(self, value):
         value = self._typify(value)
         invalid = False
         addendum = ''
@@ -373,7 +381,7 @@ class KeyChainedValue(object):
             self._name.upper(),
         )
         envval = os.environ[environame]
-        envval = self.value_cast_and_validate(envval)
+        envval = self._value_cast_and_validate(envval)
         return envval
 
     # ***
