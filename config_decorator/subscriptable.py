@@ -15,6 +15,8 @@
 #
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
+"""Defines a class that maps subscription to attribute lookup.
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -24,15 +26,33 @@ __all__ = (
 
 
 class Subscriptable(object):
-    """"""
+    """A base class that maps ``object['key']`` to either ``object.key.value`` or ``object.key``.
+
+    .. automethod:: __getitem__
+    """
 
     def __init__(self):
         super(Subscriptable, self).__init__()
         pass
 
     def __getitem__(self, name):
-        """Makes object[subscripting] to same-named object.attribute.
-           E.g., user can access data at `obj['key']` as well as `obj.key`.
+        """Makes an otherwise non-subscriptable object subscriptable.
+
+           I.e., calling ``obj['key']`` maps to ``obj.key``.
+
+           Or, put another way, the user can access data at *obj['key']* as well as *obj.key*.
+
+        .. Note::
+
+            If the derived class has a ``value`` attribute, that attribute
+            is returned instead.
+
+            E.g., given a ``ConfigDecorator`` settings configuration,
+            you can call either ``cfg['foo']['bar'].value`` or more
+            simply ``cfg.foo.bar``.
+
+        Args:
+            name: Attribute name to lookup.
         """
         item = getattr(self, name)
         try:

@@ -128,10 +128,14 @@ class KeyChainedValue(object):
 
     @property
     def name(self):
+        """Returns the setting name.
+        """
         return self._name
 
     @property
     def default(self):
+        """Returns the default setting value.
+        """
         return self._default_f(self._section)
 
     def deduce_value_type(self, value_type=None):
@@ -165,10 +169,14 @@ class KeyChainedValue(object):
 
     @property
     def doc(self):
+        """Returns the setting help text.
+        """
         return self._doc
 
     @property
     def ephemeral(self):
+        """Returns the ephemeral state.
+        """
         if callable(self._ephemeral):
             if self._section is None:
                 return False
@@ -180,6 +188,8 @@ class KeyChainedValue(object):
 
     @property
     def hidden(self):
+        """Returns the hidden state.
+        """
         if callable(self._hidden):
             if self._section is None:
                 # FIXME/2019-12-23: (lb): I think this is unreachable,
@@ -191,6 +201,8 @@ class KeyChainedValue(object):
 
     @property
     def persisted(self):
+        """Returns True if the setting value was set via :meth:`value_from_config`.
+        """
         return hasattr(self, '_val_config')
 
     def _typify(self, value):
@@ -226,6 +238,32 @@ class KeyChainedValue(object):
 
     @property
     def value(self):
+        """Returns the setting value read from the highest priority source.
+
+        Returns:
+
+            The setting value from the highest priority source,
+            as determined by the order of this list:
+
+            - If the setting value was forced,
+              by a call to the :meth:`value_from_forced` setter,
+              that value is returned.
+
+            - If the setting value was read from a command line argument,
+              by a call to the :meth:`value_from_cliarg` setter,
+              that value is returned.
+
+            - If the setting value was read from an environment variable,
+              by a call to the :meth:`value_from_envvar` setter,
+              that value is returned.
+
+            - If the setting value was read from the dictionary source,
+              by a call to the :meth:`value` or :meth:`value_from_config` setters,
+              that value is returned.
+
+            - Finally, if a value was not obtained from any of the above
+              sources, the default value is returned.
+        """
         # Honor forced values foremost.
         try:
             return self.value_from_forced
@@ -282,26 +320,53 @@ class KeyChainedValue(object):
 
     @property
     def value_from_forced(self):
+        """Returns the "forced" setting value.
+        """
         return self._val_forced
 
     @value_from_forced.setter
     def value_from_forced(self, value_from_forced):
+        """Sets the "forced" setting value, which supersedes values from all other sources.
+
+        Args:
+            value_from_forced: The forced setting value.
+        """
         self._val_forced = self._typify(value_from_forced)
 
     # ***
 
     @property
     def value_from_cliarg(self):
+        """Returns the "cliarg" setting value.
+        """
         return self._val_cliarg
 
     @value_from_cliarg.setter
     def value_from_cliarg(self, value_from_cliarg):
+        """Sets the "cliarg" setting value, which supersedes the envvar, config, and default values.
+
+        Args:
+            value_from_cliarg: The forced setting value.
+        """
         self._val_cliarg = self._typify(value_from_cliarg)
 
     # ***
 
     @property
     def value_from_envvar(self):
+        """Returns the "envvar" setting value, sourced from the environment when called.
+
+        A name derived from a special prefix, the section path,
+        and the setting name is used to look for an environment
+        variable of the same name.
+
+        For example, consider that an application use the prefix
+        "CFGDEC\_", and the setting is under a subsection called
+        "pokey" which is under a topmost section called "hokey".
+        If the setting is named "foot",
+        then the environment variable would be named,
+        "CFGDEC_HOKEY_POKEY_FOOT".
+        """
         environame = '{}{}_{}'.format(
             KeyChainedValue._envvar_prefix,
             self._section._section_path(sep='_').upper(),
@@ -315,13 +380,22 @@ class KeyChainedValue(object):
 
     @property
     def value_from_config(self):
+        """Returns the "config" setting value.
+        """
         return self._val_config
 
     @value_from_config.setter
     def value_from_config(self, value_from_config):
+        """Sets the "config" setting value, which supersedes the default value.
+
+        Args:
+            value_from_config: The forced setting value.
+        """
         self._val_config = self._typify(value_from_config)
 
     def forget_config_value(self):
+        """Removes the "config" setting value set by the :meth:`value_from_config` setter.
+        """
         try:
             del self._val_config
         except AttributeError:
