@@ -418,7 +418,7 @@ class TestConfigDecoratorUpdateKnown:
                 'unknown': 'unconsumed',
             }
         }
-        unconsumed = rootcfg._update_known(cfgdict)
+        unconsumed = rootcfg.update_known(cfgdict)
 
 
 # ***

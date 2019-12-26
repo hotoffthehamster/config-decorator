@@ -175,7 +175,7 @@ E.g.,
     # Likewise, values can be read from a dictionary, which makes loading
     # them from a file saved to disk easy to do as well.
     saved_cfg = ConfigObj('path/to/persisted/settings')
-    cfgroot._update_known(saved_cfg)
+    cfgroot.update_known(saved_cfg)
 
 ========
 Features

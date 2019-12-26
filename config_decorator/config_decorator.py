@@ -213,7 +213,7 @@ class ConfigDecorator(object):
     ..              walk
     ..              as_dict
     ..              download_to_dict
-    .. automethod:: _update_known
+    ..              update_known
     .. automethod:: _update_gross
     ..              update
     ..              setdefault
@@ -390,11 +390,11 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _update_known(self, config):
+    def update_known(self, config):
         unconsumed = {name: None for name in config.keys()}
         for section, conf_dcor in self._sections.items():
             if section in config:
-                unsubsumed = conf_dcor._update_known(config[section])
+                unsubsumed = conf_dcor.update_known(config[section])
                 if not unsubsumed:
                     del unconsumed[section]
                 else:
@@ -411,7 +411,7 @@ class ConfigDecorator(object):
     # ***
 
     def _update_gross(self, other):
-        # See also, _update_known, which does not add unknown values.
+        # See also, update_known, which does not add unknown values.
         # This method grabs everything from `other` and shoves it in this
         # ConfigDecorator object. You might find this useful if your app
         # allows self-defined config. E.g., in dob, the user can define
@@ -437,8 +437,8 @@ class ConfigDecorator(object):
     # (lb): We have some dict-ish methods, like setdefault, and keys, values,
     # and items, so might as well have an update method, too. But update is
     # just a shim to _update_gross, so that you're aware there's also the
-    # similar method, _update_known. update calls _update_gross, which is
-    # more like the actual dict.update() method than _update_known.
+    # similar method, update_known. update calls _update_gross, which is
+    # more like the actual dict.update() method than update_known.
     def update(self, other):
         self._update_gross(other)
 
