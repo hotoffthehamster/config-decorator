@@ -476,7 +476,7 @@ class TestConfigDecoratorSettingWalk:
         def visitor(section, setting):
             assert(section is rootcfg.asobj.level1.level2._)
         rootcfg = generate_config_root()
-        rootcfg.asobj.level1.level2.baz._walk(visitor)
+        rootcfg.asobj.level1.level2.baz.walk(visitor)
 
 
 # ***

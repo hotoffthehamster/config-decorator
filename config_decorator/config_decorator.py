@@ -210,7 +210,7 @@ class ConfigDecorator(object):
     ..              find_root
     ..              forget_config_values
     ..              section_path
-    .. automethod:: _walk
+    ..              walk
     ..              as_dict
     ..              download_to_dict
     .. automethod:: _update_known
@@ -321,7 +321,7 @@ class ConfigDecorator(object):
         """
         def visitor(condec, keyval):
             keyval.forget_config_value()
-        self._walk(visitor)
+        self.walk(visitor)
 
     # ***
 
@@ -338,11 +338,11 @@ class ConfigDecorator(object):
 
     # ***
 
-    def _walk(self, visitor):
+    def walk(self, visitor):
         for keyval in self._key_vals.values():
             visitor(self, keyval)
         for conf_dcor in self._sections.values():
-            conf_dcor._walk(visitor)
+            conf_dcor.walk(visitor)
 
     # ***
 

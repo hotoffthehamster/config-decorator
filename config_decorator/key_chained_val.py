@@ -235,7 +235,7 @@ class KeyChainedValue(object):
             return value
         return [value]
 
-    def _walk(self, visitor):
+    def walk(self, visitor):
         visitor(self._section, self)
 
     # ***
