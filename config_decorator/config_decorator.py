@@ -211,7 +211,7 @@ class ConfigDecorator(object):
     """Separator character used to (un)flatten section.subsection.settings paths."""
 
     def __init__(self, cls, cls_or_name, parent=None):
-        """Inits ConfigDecorator with class being decorated, section name, and optional parent reference.
+        """Inits ConfigDecorator with decorated class, section name, and parent ref.
         """
         # (lb): Note that `make docs` ignores the __init__ docstring;
         # it shows the params in the class docstring, though, so the
@@ -586,9 +586,9 @@ class ConfigDecorator(object):
                      (by performing a breadth-first search of the current section
                      and its subsections).
 
-                   - If more than one name is specified, the leading names are used to
-                     form the path to the section to search; and then any section or
-                     setting in that section matching the final name in "parts" is returned.
+                   - If more than one name is specified, the leading names form the path
+                     to the section to search; and then any section or setting in that
+                     section matching the final name in "parts" is returned.
 
             skip_sections: If True, do not include section objects in the results.
 
@@ -671,6 +671,7 @@ class ConfigDecorator(object):
                 # See also:
                 #   return super(ConfigDecorator, self).__getattribute__(name)
                 return self._find_one_object(name, AttributeError, asobj=True)
+
             @property
             def _(_self):
                 """A wonky get-out-of-jail-free card, or reference to the section.
@@ -685,7 +686,8 @@ class ConfigDecorator(object):
 
            I.e., calling ``obj['key']`` maps to ``obj.key``.
 
-           Or, put another way, the user can access data at *obj['key']* as well as *obj.key*.
+           Or, put another way, the user can access data as
+           *obj['key']* as well as *obj.key*.
 
         .. Note::
 

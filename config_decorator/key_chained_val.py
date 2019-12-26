@@ -355,7 +355,7 @@ class KeyChainedValue(object):
 
     @value_from_cliarg.setter
     def value_from_cliarg(self, value_from_cliarg):
-        """Sets the "cliarg" setting value, which supersedes the envvar, config, and default values.
+        """Sets "cliarg" setting value, which supersedes envvar, config, and default.
 
         Args:
             value_from_cliarg: The forced setting value.

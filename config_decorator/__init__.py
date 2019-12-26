@@ -17,7 +17,7 @@
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
 
 """
-The root package module provides a convenient, package-level alias to :func:`config_decorator.config_decorator.section`.
+Root module package-level alias to :func:`config_decorator.config_decorator.section`.
 
 - So you can call, e.g.,
 

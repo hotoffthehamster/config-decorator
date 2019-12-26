@@ -18,10 +18,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-import logging
-
-import factory
-import fauxfactory
 import pytest
 
 from config_decorator import section
@@ -124,7 +120,7 @@ def generate_config_root():
             "Default value list test, implicit.",
         )
         def default_value_list_test_implicit(self):
-            return [1,'foo']
+            return [1, 'foo']
 
         # ***
 
@@ -251,7 +247,7 @@ class TestConfigDecoratorAsDict:
         rootcfg = generate_config_root()
         assert isinstance(rootcfg, ConfigDecorator)
         assert isinstance(rootcfg._innerobj, object)
-        settings = rootcfg.as_dict()
+        _settings = rootcfg.as_dict()  # noqa: F841: var never used
 
 
 # ***
@@ -271,19 +267,19 @@ class TestConfigDecoratorSetDefault:
 class TestConfigDecoratorKeysValuesItems:
     def test_config_decorator_keys(self):
         rootcfg = generate_config_root()
-        keys = rootcfg.keys()
+        _keys = rootcfg.keys()  # noqa: F841: var never used
         # sorted(list(keys)) is the names of the settings tests above, e.g.,
         #   ['allow_none_test', 'choices_test', 'ephemeral_test', etc.]
 
     def test_config_decorator_values(self):
         rootcfg = generate_config_root()
-        values = rootcfg.values()
+        _values = rootcfg.values()  # noqa: F841: var never used
         # values is the default values of the settings tests above, e.g.,
         #   ['foo', '', '', 101, None, 'This will not be saved!', etc.]
 
     def test_config_decorator_items(self):
         rootcfg = generate_config_root()
-        items = rootcfg.items()
+        _items = rootcfg.items()  # noqa: F841: var never used
 
 
 # ***
@@ -377,7 +373,7 @@ class TestConfigDecoratorSetAttributeValueList:
     def test_something(self):
         rootcfg = generate_config_root()
         rootcfg['default_value_list_test_implicit'] = 123
-        assert(rootcfg['default_value_list_test_implicit'] == [123,])
+        assert(rootcfg['default_value_list_test_implicit'] == [123, ])
 
 
 # ***
@@ -403,12 +399,15 @@ class TestConfigDecoratorGetAttributeError:
         # FIXME/2019-12-23: (lb): Remove attribute magic, or maybe gait
         # through an intermediate attribute, e.g.,, rootcfg.settings.conflict.
 
+
 # ***
 
 class TestConfigDecoratorDownloadToDict:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = (
+            'test: return ckv.value_from_config'
+        )
         cfgdict = {}
         rootcfg.download_to_dict(cfgdict)
 
@@ -418,7 +417,9 @@ class TestConfigDecoratorDownloadToDict:
 class TestConfigDecoratorUpdateKnown:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = (
+            'test: return ckv.value_from_config'
+        )
         cfgdict = {
             'level1': {
                 'level2': {
@@ -427,7 +428,7 @@ class TestConfigDecoratorUpdateKnown:
                 'unknown': 'unconsumed',
             }
         }
-        unconsumed = rootcfg.update_known(cfgdict)
+        _unconsumed = rootcfg.update_known(cfgdict)  # noqa: F841: var never used
 
 
 # ***
@@ -435,7 +436,9 @@ class TestConfigDecoratorUpdateKnown:
 class TestConfigDecoratorUpdateGross:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = (
+            'test: return ckv.value_from_config'
+        )
         cfgdict = {
             'level1.level2.baz': 'zab',
             'level1.unknown': 'unconsumed',
@@ -469,7 +472,7 @@ class TestConfigDecoratorFindSettingMany:
 
 # ***
 
-class TestConfigDecoratorFindSettingOkay:
+class TestConfigDecoratorAsobjOkay:
     def test_something(self):
         rootcfg = generate_config_root()
         assert(

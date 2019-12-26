@@ -18,8 +18,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-import logging
-
 import pytest
 
 from config_decorator import section
@@ -67,7 +65,6 @@ class TestConfigDecoratorNested:
         @RootSection.section('foo')
         class NestedConfig(object):
             pass
-
 
 
 # ***
@@ -160,7 +157,7 @@ def generate_config_root_unknown_type():
 class TestSectionSettingDefaultUnknownType:
     def test_section_method(self):
         with pytest.raises(NotImplementedError):
-            rootcfg = generate_config_root_unknown_type()
+            _rootcfg = generate_config_root_unknown_type()  # noqa: F841: var !used
 
 
 # ***
@@ -187,7 +184,7 @@ class TestSectionSettingDefaultUnknownBoolDefault:
     def test_section_method(self):
         rootcfg = generate_config_root_unknown_bool_string()
         with pytest.raises(ValueError):
-            items = rootcfg.items()
+            _items = rootcfg.items()  # noqa: F841: local var... never used
 
 
 # ***
