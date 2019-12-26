@@ -48,7 +48,7 @@ and other qualities
 
 Multiple settings can be organized into
 hierarchically-related groups, or sections
-(as represented by the ``ConfigDecorator`` class,
+(as represented by the :class:`ConfigDecorator` class,
 but generated using the ``@section`` decorator).
 
 In addition to settings, each section may also contain sections
@@ -58,7 +58,7 @@ You can think of the complete hierarchical collection of sections and
 their settings as a *settings configuration*, or as the *user options*.
 
 Each section of a settings configuration is represented by a
-``ConfigDecorator`` instance. The settings themselves are
+:class:`ConfigDecorator` instance. The settings themselves are
 each represented by a ``KeyChainedVal`` instance.
 
 Typical usage
@@ -66,11 +66,11 @@ Typical usage
 
 To create a settings configuration, use the ``@section`` decorator
 once to designate the root object of the settings configuration.
-The decorated class is then used to decorate the subsection classes
-and the settings methods. (And then the subsection classes can be
-used to decorate sub-subsections and their settings, and so on.)
+The decorated class is then used to decorate each subsection class,
+as well as each settings method. (And then the subsection classes can
+be used to decorate sub-subsections and their settings, and so on.)
 
-For example,::
+For example::
 
     def generate_config(self):
         '''An example setting configuration generator.'''
@@ -103,8 +103,8 @@ For example,::
 
         return RootSection
 
-In the example above, there are two root sections defined, "foo" and "bar",
-one there's one setting defined in the "bar.baz" subsection. You could run,
+In the example above, there are two root sections defined, "foo" and "bar".
+And there's one setting defined in the "bar.baz" subsection. You could run,
 e.g.,::
 
     >>> cfg = generate_config()
@@ -116,11 +116,17 @@ after the class is defined), the settings defined in a class definition
 must be decoratored using that class's parent section. (In the previous
 example, ``@RootSectionBar.setting`` was used inside ``BarSubsectionBaz``.)
 
-CAVEAT: You cannot access the decorated user class as a normal class!
-- The ``@section`` decorator wraps the user's class in a
-``ConfigDecorator`` instance, and it returns that object.
-- So in the previous example, ``RootSection`` is an instance of ``ConfigDecorator``
-and not a ``class`` object (i.e., you cannot call ``obj = RootSection()``).
+.. Important::
+
+  - You cannot access the decorated user class using its name.
+
+    - The ``@section`` decorator wraps the class definition in a
+      :class:`ConfigDecorator` instance, and it returns that object.
+
+    - So in the previous example,
+      ``RootSection`` is a :class:`ConfigDecorator` instance
+      and not a ``class`` object.
+      I.e., you cannot call ``obj = RootSection()``.
 """
 
 from __future__ import absolute_import, unicode_literals
@@ -135,7 +141,10 @@ from .key_chained_val import KeyChainedValue
 from .subscriptable import Subscriptable
 
 __all__ = (
-    'section',
+    # So that the Sphinx docs do not generate help on the `section`
+    # function twice (because __init__.py creates an alias to it),
+    # do not export said function from this module.
+    #   'section',
     # (lb): The ConfigDecorator is technically private, because the user
     # calls @section() and doesn't make ConfigDecorator objects directly.
     # However, not including the class in __all__ excludes it from docs/, too.
@@ -145,25 +154,88 @@ __all__ = (
 
 # FIXME/2019-12-25 19:46: Remove Subscriptable; add __getitem__ that access innerkeys or whatever...
 class ConfigDecorator(Subscriptable):
-    """Represents a section of a hierarchical user configuration.
+    """Represents one section of a hierarchical settings configuration.
 
-    The user configuration is a collection of user-settable key-value
+    A settings configuration is a collection of user-settable key-value
     settings grouped and organized into a tree-like graph of sections.
 
-    The user configuration has one root section, which may have any number
+    A settings configuration has one root section, which may have any number
     of subsections and settings therein. Each subsection may also contain
     any number of subsections and settings.
 
-    The ConfigDecorator works by wrapping a decorated user class to build
-    the user configuration. As such, object creation is handled by the
-    ``@section`` decorator. Users of this library will not call ConfigDecorator()
-    directly.
+    Each :class:`ConfigDecorator` wraps a user class that defines
+    the settings in that section.
+    To add subsections to a section, use the section object's
+    :func:`ConfigDecorator.section` decorator.
+    One or more classes are defined and decorated this way
+    to build a hierarchical settings configuration.
+
+    .. Important::
+
+        Users of this library do not call :class:`ConfigDecorator()` directly.
+
+        Rather, object creation is handled by the
+        :meth:`config_decorator.section` and
+        :func:`ConfigDecorator.section`
+        decorators.
+
+    Args:
+        cls: The class being decorated.
+        cls_or_name: The section name to use in the settings configuration.
+        parent: A reference to the parent section
+                (a :class:`ConfigDecorator` object),
+                or ``None`` for the root section.
 
     Attributes:
-        _innerobj: The user's class being decorated. Because of @section decorator returns the instance of the new ConfigDecorator.
+        _innercls: The class object that was decorated
+                   (whose name now references a :class:`ConfigDecorator` instance,
+                   and not the :class:`class` object that was defined.
+        _innerobj: An instance of the class object that was decorated.
+        _parent: A reference to the parent :class:`ConfigDecorator` section,
+                 or ``None`` for the root section.
+        _kv_cache: An ordered dict of settings defined by the class,
+                   used internally when build the settings configuration
+                   (i.e., used internally while sourcing Python code).
+        _key_vals: This section's settings, stored as a dict
+                   (setting name ⇒
+                   :class:`config_decorator.key_chained_val.KeyChainedValue` object).
+        _sections: An ordered dict of subsections
+                   (section name ⇒ :class:`ConfigDecorator` object).
+        _name: The section name, specified in the decorator,
+               or inferred from the class name.
+
+    .. Use `automethod` to document private functions (include in docs/_build).
+    .. automethod:: _pull_kv_cache
+    .. automethod:: _find_root
+    .. automethod:: _forget_config_values
+    .. automethod:: _section_path
+    .. automethod:: _walk
+    ..              as_dict
+    ..              download_to_dict
+    .. automethod:: _update_known
+    .. automethod:: _update_gross
+    ..              update
+    ..              setdefault
+    ..              keys
+    ..              values
+    ..              items
+    .. automethod:: _find
+    .. automethod:: _find_objects_named
+    .. automethod:: _find_setting
+    .. automethod:: __getattr__
+    .. automethod:: __setitem__
+    .. automethod:: _find_one_object
+    ..              section
+    ..              setting
     """
 
     def __init__(self, cls, cls_or_name, parent=None):
+        """Inits ConfigDecorator with class being decorated, section name, and optional parent reference.
+        """
+        # (lb): Note that `make docs` ignores the __init__ docstring;
+        # it shows the params in the class docstring, though, so the
+        # parameters are documented there.
+
         super(ConfigDecorator, self).__init__()
 
         # We create and keep a handle to an instance of the decorated class,
@@ -179,8 +251,10 @@ class ConfigDecorator(Subscriptable):
         # reference to the MyConfig class. I.e., so you cannot call
         #   # Won't work:
         #   obj = MyConfig()
-        # but you can instead (via this attribute) call:
+        #   obj.foo
+        # but you can instead call:
         #   MyConfig._innerobj.foo
+        self._innercls = cls
         self._innerobj = cls()
 
         self._parent = parent
@@ -197,11 +271,11 @@ class ConfigDecorator(Subscriptable):
 
         self._pull_kv_cache(parent)
 
-        self._initialized = True
-
     # ***
 
     def _pull_kv_cache(self, parent):
+        """
+        """
         if parent is None:
             return
         # The @decorators run against the parent object.
@@ -537,7 +611,7 @@ class ConfigDecorator(Subscriptable):
 
 # Note that Python invokes the decorator with the item being decorated. If
 # you want to pass arguments to the decorator, you can call a function to
-# retain the arguments and to generate the actual decorator .
+# retain the arguments and to generate the actual decorator.
 #
 # E.g., if a decorator is not explicitly invoked,
 #
@@ -559,6 +633,38 @@ class ConfigDecorator(Subscriptable):
 # Here we support either approach.
 
 def section(cls_or_name, parent=None):
+    """Class decorator used to indicate the root section of a settings configuration.
+
+    For instance::
+
+        @section(None)
+        class RootSection(object):
+            pass
+
+    See :ref:`Concepts` for more help and usage examples.
+
+    Args:
+        cls_or_name: The section name, or the class being decorated
+                     if the decorator was not closed.
+        parent: When defining a subsection, the reference to the parent section
+                (used internally by
+                :meth:`config_decorator.config_decorator.ConfigDecorator.section`).
+
+    Returns:
+        A :class:`ConfigDecorator` instance.
+
+        .. Important::
+
+          The name of the decorated class does not reference the defined user
+          class, but rather it's a
+          :class:`config_decorator.config_decorator.ConfigDecorator`
+          instance.
+
+          To access the class definition that was decorated,
+          use the return object's ``_innercls`` attribute.
+
+          To access an instance of the decorated class, use ``_innerobj``.
+    """
     def _add_section(cls):
         cfg_dcor = None
         if parent is None or not cls_or_name:

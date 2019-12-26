@@ -17,18 +17,22 @@
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
 
 """
-config-decorator
-~~~~~~~~~~~~~~~~
+This module provides a convenient, package-level alias to :func:`config_decorator.config_decorator.section`.
 
-config-decorator makes it easy to define a hierarchical
-collection of user-configurable key-value settings using
-Pythonic @decorator syntax. It can be used with a modern
-storage container, such as ConfigObj, to add a capable,
-robust user configuration subsystem to any application.
+- So you can call, e.g.,
+
+  .. code-block:: python
+
+      from config_decorator import section
+
+  instead of
+
+  .. code-block:: python
+
+      from config_decorator.config_decorator import section
 """
 
 from .config_decorator import section
-'''A convenience pointer.'''
 
 __all__ = (
     'section',

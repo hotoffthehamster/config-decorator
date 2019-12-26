@@ -15,6 +15,8 @@
 #
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
+"""Defines a class to manage a key-value setting.
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -28,6 +30,11 @@ __all__ = (
 
 
 class KeyChainedValue(object):
+    """Represents one setting of a section of a hierarchical settings configuration.
+
+    .. automethod:: __init__
+    """
+
     _envvar_prefix = ''
 
     def __init__(
@@ -44,6 +51,62 @@ class KeyChainedValue(object):
         hidden=False,
         validate=None,
     ):
+        """Inits a :class:`KeyChainedValue` object.
+
+        Do not create these objects directly, but instead
+        use the
+        :func:`config_decorator.config_decorator.ConfigDecorator.settings`
+        decorator.
+
+        Except for ``section``, the following arguments may be specified
+        in the decorator call.
+
+        For instance::
+
+            @property
+            @RootSectionBar.setting(
+                "An example setting.",
+                name='foo-bar',
+                value_type=bool,
+                hidden=True,
+                # etc.
+            )
+            def foo_bar(self):
+                return 'True'
+
+        Args:
+            section: A reference to the section that contains this setting
+                     (a :class:`config_decorator.config_decorator.ConfigDecorator`).
+            name: The setting name, either inferred from the class method that
+                  is decorated, or specified explicitly.
+            default_f: A method (i.e., the decorated class method)
+                       that generates the default setting value.
+            value_type: The setting type, either inferred from the type of
+                        the default value, or explicitly indicated.
+                        It's often useful to explicitly set ``bool`` types
+                        so that the default function can return a ``'True'``
+                        or ``'False'`` string.
+            allow_none: True if the value is allowed to be ``None``, otherwise
+                        when the value is set, it will be passed to the type
+                        converted, which might fail on None, or produce
+                        unexpected results
+                        (such as converting ``None`` to ``'None'``).
+            choices: A optional list of valid values, used to validate input
+                     when setting the value.
+            doc: Helpful text about the setting, which your application could
+                 use to show the user. The ``doc`` can specified as a keyword
+                 argument, or as the first positional argument to the decorator.
+            ephemeral: If True, the setting is meant not to be persisted
+                       between sessions (e.g., ``ephemeral`` settings are
+                       excluded on a call to
+                       :meth:`config_decorator.config_decorator.ConfigDecorator.download_to_dict`
+                       .)
+            hidden: If True, the setting is excluded from an output operation
+                    if the value is the same as the setting's default value.
+            validate: An optional function to validate the value when set
+                      from user input. If the validate function returns a
+                      falsey value, setting the value raises ``ValueError``.
+        """
         self._section = section
         self._name = name
         self._default_f = default_f

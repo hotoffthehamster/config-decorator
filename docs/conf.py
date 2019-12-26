@@ -57,7 +57,9 @@ extensions = [
     # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
     # https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
     # https://google.github.io/styleguide/pyguide.html#383-functions-and-methods
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    # For hyperlinks, e.g., :ref:`My Section Title`.
+    'sphinx.ext.autosectionlabel',
 ]
 
 

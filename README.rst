@@ -1,6 +1,6 @@
-################
-config-decorator
-################
+#########################################
+*config-decorator* user options framework
+#########################################
 
 .. image:: https://travis-ci.com/hotoffthehamster/config-decorator.svg?branch=develop
   :target: https://travis-ci.com/hotoffthehamster/config-decorator
@@ -45,19 +45,26 @@ User configuration framework developed for |dob|_.
 Overview
 ========
 
-Build elegant, robust, and maintainable user configuration
-using common sense and ``@decorated`` class methods.
+config-decorator makes it easy to define a hierarchical
+collection of user-configurable key-value settings using
+Pythonic ``@decorator`` syntax. It can be used with a modern
+file round tripper, such as |ConfigObj|_, to add a capable,
+robust user configuration subsystem to any application.
 
-The user configuration defines a collection of user-settable values and
-their defaults, and specifies type validation, value validation, user
-help, and more.
+.. Build elegant, robust, and maintainable configuration settings
+.. using common sense and ``@decorated`` class methods.
 
-An instantiated configuration object acts like a subscriptable ``dict``,
-making it easy to drop into existing code.
+.. The configuration settings define a collection of user-settable values and
+.. their defaults, as well as specifying type validation, value validation,
+.. user help, and more.
 
-The configuration can also be marshalled to or from a flat dictionary, making
-it easy to persist using an external package (for example, |ConfigObj|_,
-which reads and writes INI files to and from dictionaries).
+.. An instantiated configuration object acts like a subscriptable ``dict``,
+.. making it easy to drop into existing code.
+
+.. The configuration settings can also be marshalled to or from a flat
+.. dictionary, making it easy to persist using an external package
+.. (for example, |ConfigObj|_, which reads and writes INI files to and
+.. from dictionaries).
 
 =======
 Example
