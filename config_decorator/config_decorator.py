@@ -205,30 +205,6 @@ class ConfigDecorator(object):
     .. DEV: Use `automethod` to document private functions (include them in docs/_build).
     ..
     .. E.g., `automethod:: _my_method_name`
-
-    ..              _pull_kv_cache
-    ..              find_root
-    ..              forget_config_values
-    ..              section_path
-    ..              walk
-    ..              as_dict
-    ..              download_to_dict
-    ..              update_known
-    ..              update_gross
-    ..              update
-    ..              setdefault
-    ..              keys
-    ..              values
-    ..              items
-    .. automethod:: _find
-    ..              _find_objects_named
-    ..              find_setting
-    ..              asobj
-    .. automethod:: __getitem__
-    .. automethod:: __setitem__
-    .. automethod:: _find_one_object
-    ..              section
-    ..              setting
     """
 
     SEP = '.'
@@ -350,6 +326,14 @@ class ConfigDecorator(object):
     # ***
 
     def walk(self, visitor):
+        """Visits every section and runs the passed method on every setting.
+
+        Args:
+            visitor: Function to run on each setting.
+                     Will be passed a reference to the :class:`ConfigDecorator`,
+                     and a reference to the
+                     :class:`config_decorator.key_chained_val.KeyChainedValue` object.
+        """
         for keyval in self._key_vals.values():
             visitor(self, keyval)
         for conf_dcor in self._sections.values():
@@ -358,6 +342,8 @@ class ConfigDecorator(object):
     # ***
 
     def as_dict(self):
+        """Returns a new dict representing the configuration settings tree.
+        """
         newd = {}
         self.download_to_dict(newd)
         return newd
@@ -365,6 +351,18 @@ class ConfigDecorator(object):
     def download_to_dict(
         self, config, skip_unset=False, use_defaults=False, add_hidden=False,
     ):
+        """Updates the passed dict with all configuration settings.
+
+        Args:
+            config: The dict to update.
+            skip_unset: Set True to exclude settings that do not have a value
+                        set from the "config" source.
+            use_defaults: Set True to use the default value for every setting.
+            add_hidden: Set True to include settings with the "hidden" property set.
+
+        Returns:
+            The number of settings updated or added to the "config" dict.
+        """
         def _download_to_dict():
             n_settings = 0
             for section, conf_dcor in self._sections.items():
@@ -402,6 +400,16 @@ class ConfigDecorator(object):
     # ***
 
     def update_known(self, config):
+        """Updates existing settings values from a given dictionary.
+
+        Args:
+            config: A dict whose key-values will be used to set
+                    settings "config" value sources accordingly.
+
+        Returns:
+            A dict containing any unknown key-values from "config"
+            that did not correspond to a known section or setting.
+        """
         unconsumed = {name: None for name in config.keys()}
         for section, conf_dcor in self._sections.items():
             if section in config:
@@ -422,23 +430,38 @@ class ConfigDecorator(object):
     # ***
 
     def update_gross(self, other):
-        # See also, update_known, which does not add unknown values.
-        # This method grabs everything from `other` and shoves it in this
-        # ConfigDecorator object. You might find this useful if your app
-        # allows self-defined config. E.g., in dob, the user can define
-        # their own named styles (that can be referenced in another config).
-        # In that instance, the application cannot define the config (key
-        # names) ahead of time (using @setting decorators), but instead
-        # uses the key names that the user supplies (and calls this method
-        # to consume those unknown settings).
+        """Consumes all values from a dict, creating new sections and settings as necessary.
 
-        # CAVEAT: (lb): I've only used this method as a shallow update,
-        # for flat config (i.e., all values are KeyChainedValue objects,
-        # and there are no sections (ConfigDecorator objects)).
-        # MAYBE/2019-11-30: (lb): Ensure this handles nested dicts in other,
-        # and sets _sections, etc. (For now, you can work around by flattening
-        # other and using dotted names to indicate sub-sections, because the
-        # setdefault method *is* smart enough to find nested section settings.)
+        Args:
+            other: The dict whose contents will be consumed.
+
+        See also :meth:`update_known`, which does not add unknown values.
+
+        This method is less discerning. It grabs everything from ``other``
+        and shoves it in the ConfigDecorator object, creating section
+        and setting objects as necessary.
+
+        You might find this useful if your app handles arbitrary config.
+        In this case, the application cannot define the config in the code,
+        because it lets the user use whatever names they want. In that case,
+        load the config into a dict (say, using |ConfigObj|_), and then pass
+        that dictionary to this method.
+
+        .. |ConfigObj| replace:: ``ConfigObj``
+        .. _ConfigObj: https://github.com/DiffSK/configobj
+        """
+        # For instance, the ``dob`` application allows the user to define their
+        #   own named Pygment styles that can be referenced in a separate config.
+        #   Because of this, the application cannot define the config ahead of
+        #   time (using @setting decorators) because it does not know the setting
+        #   names (which are whatever the user wants)
+        # CAVEAT: (lb): I've only used this method as a shallow update, for flat
+        #   config (i.e., all values are KeyChainedValue objects, and there are no
+        #   sections (ConfigDecorator objects)).
+        #   - MAYBE/2019-11-30: (lb): Ensure this handles nested dicts in other,
+        #     and sets _sections, etc. (For now, you can work around by flattening
+        #     other and using dotted names to indicate sub-sections, because the
+        #     setdefault method *is* smart enough to find nested section settings.)
         for key, val in other.items():
             try:
                 self[key] = val
@@ -451,15 +474,27 @@ class ConfigDecorator(object):
     # similar method, update_known. update calls update_gross, which is
     # more like the actual dict.update() method than update_known.
     def update(self, other):
+        """Alias to :meth:`update_gross`.
+        """
         self.update_gross(other)
 
     # ***
 
     def setdefault(self, *args):
-        # Here we quack like a duck (dict) and supply a smarty pants setdefault,
-        # which nark calls to make sure all the config settings it cares about
-        # are setup. It's smarty pants because you can use dotted.section.names,
-        # and setdefault will descend one or more sections to find the setting.
+        """Ensures the indicated setting exists, much like ``dict.setdefault``.
+
+        Args:
+            args: one or more arguments indicating the section path and setting name,
+                  and one final argument indicating the default setting value to use.
+
+        Returns:
+            The setting value (the existing value if already set; otherwise
+            the new default value, which is also the last item in ``*args``).
+        """
+        # Here we quack like a duck (dict) and supply a smarty pants setdefault, which
+        # the nark package calls to make sure all the config settings it cares about
+        # are setup. It's smarty pants because you can use dotted.section.names, and
+        # setdefault will descend one or more sections to find the setting.
 
         def _setdefault():
             must_args_two_or_more()
@@ -486,6 +521,10 @@ class ConfigDecorator(object):
             for section_name in section_names:
                 conf_dcor = getsection(conf_dcor, section_name)
             if setting_name in conf_dcor._key_vals:
+                # Unlike the method name might imply (set-DEFAULT), we don't
+                # actually set the KeyChainedValue default. We simple ensure
+                # that the setting exists. (The method is called "setdefault"
+                # to indicate its similarity to Python's ``dict.setdefault``.)
                 return conf_dcor._key_vals[setting_name]
             ckv = KeyChainedValue(
                 name=setting_name,
@@ -515,14 +554,20 @@ class ConfigDecorator(object):
     # ***
 
     def keys(self):
+        """Returns a list of settings names.
+        """
         # MAYBE/2019-11-30: (lb): What about self._sections??
         return self._key_vals.keys()
 
     def values(self):
+        """Returns a list of settings values.
+        """
         # MAYBE/2019-11-30: (lb): What about self._sections??
         return [v.value for v in self._key_vals.values()]
 
     def items(self):
+        """Returns a dictionary of setting key names → values.
+        """
         # MAYBE/2019-11-30: (lb): What about self._sections??
         return {k: v.value for k, v in self._key_vals.items()}
 
@@ -573,6 +618,14 @@ class ConfigDecorator(object):
         return objects
 
     def find_setting(self, parts):
+        """Returns the setting with the given path and name.
+
+        Args:
+            parts: A list of strings indicating the section names and setting name.
+
+        Returns:
+            The indentified setting, or None if no setting found.
+        """
         objects = self._find(parts, skip_sections=True)
         if objects:
             return objects[0]
@@ -662,9 +715,52 @@ class ConfigDecorator(object):
 
     # A @redecorator.
     def section(self, name):
+        """Class decorator used to create subsections.
+
+        For instance::
+
+            @section(None)
+            class RootSection(object):
+                pass
+
+            @RootSection.section('My Subsection')
+            class MySubsection(object):
+                pass
+
+            @MySubsection.section('A Grandsubsection')
+            class AGrandsubsection(object):
+                pass
+
+        Args:
+            name: The name of the subsection.
+
+        Returns:
+            A :class:`ConfigDecorator` instance.
+
+        See :func:`config_decorator.config_decorator.section`
+        :func:`section`
+        for a more complete explanation.
+        """
         return section(name, parent=self)
 
     def setting(self, message=None, **kwargs):
+        """Method decorator used to create individual settings in a configuration section.
+
+        For instance::
+
+            ...
+
+            @RootSection.section('My Subsection')
+            class MySubsection(object):
+                @property
+                @RootSection.setting(
+                    "An example setting.",
+                    name="my-setting"
+                )
+                def my_setting(self):
+                    return 'My Setting's Default Value'
+
+        """
         def decorator(func):
             kwargs.setdefault('name', func.__name__)
             doc = message

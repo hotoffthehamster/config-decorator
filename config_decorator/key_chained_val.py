@@ -415,7 +415,7 @@ class KeyChainedValue(object):
 
     @property
     def asobj(self):
-        """Returns self, behaving as identify function.
+        """Returns self, behaving as identify function (need to quack like ``ConfigDecorator``).
         """
         return self
 
