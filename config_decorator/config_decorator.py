@@ -325,16 +325,27 @@ class ConfigDecorator(object):
 
     # ***
 
-    def section_path(self, parts=None, sep=None):
-        if parts is None:
-            parts = []
+    def section_path(self, sep=None, _parts=None):
+        """Returns a flattened canonicalized representation of the complete section path.
+
+        Args:
+            sep: The separator character to use, defaults to ConfigDecorator.SEP.
+            _parts: Used internally on recursive calls to this function.
+
+        Returns:
+            The "path" to this section, as derived from the name of the root
+            section on downward to this section, using the separator character
+            between each successive section's name.
+        """
+        if _parts is None:
+            _parts = []
         if sep is None:
             sep = self.SEP
         # Ignore the root element. Start with its sections.
         if self._parent is None:
-            return sep.join(parts)
-        parts.insert(0, self._name)
-        return self._parent.section_path(parts, sep)
+            return sep.join(_parts)
+        _parts.insert(0, self._name)
+        return self._parent.section_path(sep, _parts)
 
     # ***
 
