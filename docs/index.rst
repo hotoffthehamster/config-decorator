@@ -11,8 +11,8 @@ Welcome to config-decorator's documentation!
    :caption: Contents:
 
    API Reference <modules>
-   Developer Credits <authors>
-   Project History <history>
+..   Developer Credits <authors>
+..   Project History <history>
 
 .. include:: ../README.rst
 
