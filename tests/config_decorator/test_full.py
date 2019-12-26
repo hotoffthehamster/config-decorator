@@ -440,21 +440,21 @@ class TestConfigDecoratorUpdateGross:
 class TestConfigDecoratorFindSettingOkay:
     def test_something(self):
         rootcfg = generate_config_root()
-        setting = rootcfg._find_setting(['level1', 'level2', 'baz'])
+        setting = rootcfg.find_setting(['level1', 'level2', 'baz'])
         assert(setting.value == 'bat')
 
 
 class TestConfigDecoratorFindSettingFail:
     def test_something(self):
         rootcfg = generate_config_root()
-        setting = rootcfg._find_setting(['unknown setting'])
+        setting = rootcfg.find_setting(['unknown setting'])
         assert(setting is None)
 
 
 class TestConfigDecoratorFindSettingMany:
     def test_something(self):
         rootcfg = generate_config_root()
-        setting = rootcfg._find_setting(['conflict'])
+        setting = rootcfg.find_setting(['conflict'])
         assert(setting.value == 'level1')
 
 

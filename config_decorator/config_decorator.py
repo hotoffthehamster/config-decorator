@@ -221,8 +221,8 @@ class ConfigDecorator(object):
     ..              values
     ..              items
     .. automethod:: _find
-    .. automethod:: _find_objects_named
-    .. automethod:: _find_setting
+    ..              _find_objects_named
+    ..              find_setting
     ..              asobj
     .. automethod:: __getitem__
     .. automethod:: __setitem__
@@ -572,7 +572,7 @@ class ConfigDecorator(object):
             objects.extend(conf_dcor._find_objects_named(name, skip_sections))
         return objects
 
-    def _find_setting(self, parts):
+    def find_setting(self, parts):
         objects = self._find(parts, skip_sections=True)
         if objects:
             return objects[0]
