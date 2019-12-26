@@ -20,6 +20,6 @@ in the hope that it will be useful (!)
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Read on for more details.
 
-.. include:: ../LICENSE
-   :literal:
+.. literalinclude:: ../LICENSE
+   :language: none
 
