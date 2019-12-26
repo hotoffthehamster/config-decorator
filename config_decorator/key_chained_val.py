@@ -373,7 +373,7 @@ class KeyChainedValue(object):
         variable of the same name.
 
         For example, consider that an application use the prefix
-        "CFGDEC\_", and the setting is under a subsection called
+        "CFGDEC\\_", and the setting is under a subsection called
         "pokey" which is under a topmost section called "hokey".
         If the setting is named "foot",
         then the environment variable would be named,
