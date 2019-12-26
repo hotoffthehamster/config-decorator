@@ -214,11 +214,13 @@ def generate_config_root_fails_validation():
 
 
 class TestSectionSettingValidationFail:
-    def test_section_method(self):
+    def test_section_method_attribute(self):
         rootcfg = generate_config_root_fails_validation()
         with pytest.raises(ValueError):
-            rootcfg.validate_bool_string_fail_test.value = 123
+            rootcfg.asobj.validate_bool_string_fail_test.value = 123
 
-
-
+    def test_section_method_subscript(self):
+        rootcfg = generate_config_root_fails_validation()
+        with pytest.raises(ValueError):
+            rootcfg['validate_bool_string_fail_test'] = 123
 

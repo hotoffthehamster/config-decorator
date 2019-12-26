@@ -409,4 +409,10 @@ class KeyChainedValue(object):
         except AttributeError:
             pass
 
+    @property
+    def asobj(self):
+        """Returns self, behaving as identify function.
+        """
+        return self
+
 

@@ -548,6 +548,30 @@ class ConfigDecorator(object):
 
     # ***
 
+    @property
+    def asobj(self):
+        """Returns a representation of the section that can be accessed like an object.
+
+        Returns:
+
+            An object that overrides ``__getattr__`` to find the section or setting
+            in the current section that has the given name.
+
+            The object also has a magic ``_`` method, if you want to use dot-notation
+            to get at a subsection, but then want access to the actual section object.
+        """
+        class anyobj(object):
+            def __getattr__(_self, name):
+                # See also:
+                #   return super(ConfigDecorator, self).__getattribute__(name)
+                return self._find_one_object(name, AttributeError, asobj=True)
+            @property
+            def _(_self):
+                """A wonky get-out-of-jail-free card, or reference to the section.
+                """
+                return self
+        return anyobj()
+
     def __getitem__(self, name):
         """Returns the section or setting with the given name.
 
@@ -581,7 +605,7 @@ class ConfigDecorator(object):
     def __setitem__(self, name, value):
         self._find_one_object(name, KeyError).value = value
 
-    def _find_one_object(self, name, error_cls):
+    def _find_one_object(self, name, error_cls, asobj=False):
         parts = name.split(self.SEP)
         if len(parts) > 1:
             # User looked up, e.g., config['section1.section2....key'].
@@ -593,7 +617,7 @@ class ConfigDecorator(object):
                 _('More than one config object named: “{}”').format(name)
             )
         if objects:
-            return objects[0]
+            return objects[0].asobj if asobj else objects[0]
         else:
             # DEV: This happens if you lookup an attr in config you didn't define.
             raise error_cls(

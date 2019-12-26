@@ -291,7 +291,7 @@ class TestConfigDecoratorKeysValuesItems:
 class TestConfigDecoratorAttributeMagic:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg.level1.level2.baz.value == 'bat')
+        assert(rootcfg.asobj.level1.level2.baz.value == 'bat')
 
 
 class TestConfigDecoratorSubscriptability:
@@ -331,7 +331,7 @@ class TestConfigDecoratorFindRoot:
         rootcfg = generate_config_root()
         assert(rootcfg['level1']._find_root() is rootcfg)
         rootcfg = generate_config_root()
-        assert(rootcfg['level1'].foo._find_root() is rootcfg)
+        assert(rootcfg['level1'].asobj.foo._find_root() is rootcfg)
 
 
 # ***
@@ -344,7 +344,19 @@ class TestConfigDecoratorForgetfulWalk:
 
 # ***
 
-class TestConfigDecoratorSetAttributeValue:
+class TestConfigDecoratorSetAttributeValueBool:
+    def test_one_way(self):
+        rootcfg = generate_config_root()
+        rootcfg.asobj.validate_bool_string_false_test.value = True
+
+    def test_or_the_other(self):
+        rootcfg = generate_config_root()
+        rootcfg['validate_bool_string_false_test'] = False
+
+
+# ***
+
+class TestConfigDecoratorSetAttributeValueString:
     def test_something(self):
         rootcfg = generate_config_root()
         rootcfg['level1.foo'] = 'zab'
@@ -352,7 +364,7 @@ class TestConfigDecoratorSetAttributeValue:
 
 # ***
 
-class TestConfigDecoratorSetAttributeValue:
+class TestConfigDecoratorSetAttributeValueList:
     def test_something(self):
         rootcfg = generate_config_root()
         rootcfg['default_value_list_test_implicit'] = 123
@@ -387,7 +399,7 @@ class TestConfigDecoratorGetAttributeError:
 class TestConfigDecoratorDownloadToDict:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
         cfgdict = {}
         rootcfg.download_to_dict(cfgdict)
 
@@ -397,7 +409,7 @@ class TestConfigDecoratorDownloadToDict:
 class TestConfigDecoratorUpdateKnown:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
         cfgdict = {
             'level1': {
                 'level2': {
@@ -414,7 +426,7 @@ class TestConfigDecoratorUpdateKnown:
 class TestConfigDecoratorUpdateGross:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
+        rootcfg.asobj.level1.level2.baz.value_from_config = 'test: return ckv.value_from_config'
         cfgdict = {
             'level1.level2.baz': 'zab',
             'level1.unknown': 'unconsumed',
@@ -453,7 +465,7 @@ class TestConfigDecoratorFindSettingOkay:
         rootcfg = generate_config_root()
         assert(
             "Test sub sub config setting, level1.level2.bar"
-            == rootcfg.level1.level2.baz.doc
+            == rootcfg.asobj.level1.level2.baz.doc
         )
 
 
@@ -462,9 +474,9 @@ class TestConfigDecoratorFindSettingOkay:
 class TestConfigDecoratorSettingWalk:
     def test_something(self):
         def visitor(section, setting):
-            assert(section is rootcfg.level1.level2)
+            assert(section is rootcfg.asobj.level1.level2._)
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz._walk(visitor)
+        rootcfg.asobj.level1.level2.baz._walk(visitor)
 
 
 # ***
@@ -472,7 +484,7 @@ class TestConfigDecoratorSettingWalk:
 class TestConfigDecoratorSettingSetForced:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz.value_from_forced = 123
+        rootcfg.asobj.level1.level2.baz.value_from_forced = 123
 
 
 # ***
@@ -480,7 +492,7 @@ class TestConfigDecoratorSettingSetForced:
 class TestConfigDecoratorSettingSetCliarg:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.level1.level2.baz.value_from_cliarg = 123
+        rootcfg.asobj.level1.level2.baz.value_from_cliarg = 123
 
 
 # ***
@@ -488,7 +500,7 @@ class TestConfigDecoratorSettingSetCliarg:
 class TestSectionSettingValidationOkay:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.validate_okay_test.value = 123
+        rootcfg.asobj.validate_okay_test.value = 123
 
 
 # ***
@@ -496,14 +508,14 @@ class TestSectionSettingValidationOkay:
 class TestSectionSettingChoicesOkay:
     def test_something(self):
         rootcfg = generate_config_root()
-        rootcfg.choices_test.value = 'one'
+        rootcfg.asobj.choices_test.value = 'one'
 
 
 class TestSectionSettingChoicesFail:
     def test_something(self):
         rootcfg = generate_config_root()
         with pytest.raises(ValueError):
-            rootcfg.choices_test.value = 'foo'
+            rootcfg.asobj.choices_test.value = 'foo'
 
 
 # ***
@@ -516,7 +528,7 @@ class TestSectionSettingFromEnvvar:
         environame = 'TEST_LEVEL1_FOO'
         import os
         os.environ[environame] = 'zab'
-        assert(rootcfg.level1.foo.value == 'zab')
+        assert(rootcfg.asobj.level1.foo.value == 'zab')
         del os.environ[environame]
 
 
@@ -525,22 +537,22 @@ class TestSectionSettingFromEnvvar:
 class TestSectionSettingPrecedence:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg.level1.foo.value == 'baz')
+        assert(rootcfg.asobj.level1.foo.value == 'baz')
         # Note that setting value assumes from config.
-        rootcfg.level1.foo.value = 'bat'
-        assert(rootcfg.level1.foo.value_from_config == 'bat')
-        assert(rootcfg.level1.foo.value == 'bat')
+        rootcfg.asobj.level1.foo.value = 'bat'
+        assert(rootcfg.asobj.level1.foo.value_from_config == 'bat')
+        assert(rootcfg.asobj.level1.foo.value == 'bat')
         #
         from config_decorator.key_chained_val import KeyChainedValue
         KeyChainedValue._envvar_prefix = 'TEST_'
         environame = 'TEST_LEVEL1_FOO'
         import os
         os.environ[environame] = 'zab'
-        assert(rootcfg.level1.foo.value == 'zab')
+        assert(rootcfg.asobj.level1.foo.value == 'zab')
         # Note that int will be converted to setting type, which is string.
-        rootcfg.level1.foo.value_from_cliarg = 123
-        assert(rootcfg.level1.foo.value == '123')
+        rootcfg.asobj.level1.foo.value_from_cliarg = 123
+        assert(rootcfg.asobj.level1.foo.value == '123')
         #
-        rootcfg.level1.foo.value_from_forced = 'perfect!'
-        assert(rootcfg.level1.foo.value == 'perfect!')
+        rootcfg.asobj.level1.foo.value_from_forced = 'perfect!'
+        assert(rootcfg.asobj.level1.foo.value == 'perfect!')
 
