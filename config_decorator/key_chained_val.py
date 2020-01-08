@@ -253,6 +253,16 @@ class KeyChainedValue(object):
 
     # ***
 
+    def __str__(self):
+        return '{}{}{}: {}'.format(
+            self._section.section_path(),
+            self._section.SEP,
+            self._name,
+            self.value,
+        )
+
+    # ***
+
     @property
     def value(self):
         """Returns the setting value read from the highest priority source.
