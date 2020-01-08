@@ -360,9 +360,9 @@ class ConfigDecorator(object):
     def _prepare_dict(
         self,
         config,
+        add_hidden=False,
         skip_unset=False,
         use_defaults=False,
-        add_hidden=False,
     ):
         """Updates the passed dict with all configuration settings.
 
@@ -393,7 +393,12 @@ class ConfigDecorator(object):
         def _recurse_section(section, conf_dcor):
             existed = section in config
             subsect = config.setdefault(section, {})
-            n_settings = conf_dcor._prepare_dict(subsect)
+            n_settings = conf_dcor.apply_items(
+                subsect,
+                add_hidden=add_hidden,
+                skip_unset=skip_unset,
+                use_defaults=use_defaults,
+            )
             if not n_settings and not existed:
                 del config[section]
             return n_settings
