@@ -495,10 +495,13 @@ class ConfigDecorator(object):
         #     other and using dotted names to indicate sub-sections, because the
         #     setdefault method *is* smart enough to find nested section settings.)
         for key, val in other.items():
-            try:
-                self[key] = val
-            except KeyError:
-                self.setdefault(key, val)
+            if isinstance(val, dict):
+                ConfigDecorator.getsection(self, key).update_gross(val)
+            else:
+                try:
+                    self[key] = val
+                except KeyError:
+                    self.setdefault(key, val)
 
     # (lb): We have some dict-ish methods, like setdefault, and keys, values,
     # and items, so might as well have an update method, too. But update is
