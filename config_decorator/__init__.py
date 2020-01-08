@@ -32,9 +32,10 @@ Root module package-level alias to :func:`config_decorator.config_decorator.sect
       from config_decorator.config_decorator import section
 """
 
-from .config_decorator import section
+from .config_decorator import section, ConfigDecorator
 
 __all__ = (
     'section',
+    'ConfigDecorator',
 )
 
