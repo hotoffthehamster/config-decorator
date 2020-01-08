@@ -938,7 +938,7 @@ def section(cls_or_name, parent=None):
 
         return cfg_dcor
 
-    # Check if decorator was @gentle or @explicit().
+    # Check if decorator was @passive or @emphatic().
     if inspect.isclass(cls_or_name):
         # The decorator was used without being invoked first, e.g.,
         #   @section
