@@ -172,7 +172,10 @@ class KeyChainedValue(object):
             return str
         # We could default to, say, str, or we could nag user to either
         # add another `elif` here, or to fix their default return value.
-        raise NotImplementedError
+        msg = _(' (Unrecognized value type: ‘{}’)').format(
+            type(default_value).__name__,
+        )
+        raise NotImplementedError(msg)
 
     @property
     def doc(self):
@@ -216,15 +219,11 @@ class KeyChainedValue(object):
         """
         return hasattr(self, '_val_config')
 
-    def _conform(self, value):
-        value = self._typify(value)
-        if self._conform_f:
-            value = self._conform_f(value)
-        return value
-
     def _typify(self, value):
-        if self._value_allow_none and value is None:
-            return value
+        if value is None:
+            if self._value_allow_none:
+                return value
+            raise ValueError(_(" (No “None” values allowed)"))
         if self._value_type is bool:
             if isinstance(value, bool):
                 return value
@@ -233,12 +232,12 @@ class KeyChainedValue(object):
             elif value == 'False':
                 return False
             else:
-                raise ValueError(
-                    _("Unrecognized string for bool setting ‘{}’: “{}”").format(
-                        self._name, value,
-                    ),
-                )
-        return self._value_type(value)
+                raise ValueError(_(" (Expected a bool, or “True” or “False”)"))
+        try:
+            value = self._value_type(value)
+        except Exception as err:
+            raise ValueError(_(" ({})").format(str(err)))
+        return value
 
     def _typify_list(self, value):
         # Handle ConfigObj parsing a string without finding commas to
@@ -335,23 +334,46 @@ class KeyChainedValue(object):
         self._val_origin = orig_value
 
     def _value_conform_and_validate(self, value):
-        value = self._conform(value)
-        invalid = False
-        addendum = ''
-        if self._validate_f:
-            if not self._validate_f(value):
-                invalid = True
-        elif self._choices:
-            if value not in self._choices:
-                invalid = True
-                addendum = _(' (Choose from: ‘{}’)').format('’, ‘'.join(self._choices))
-        if invalid:
-            raise ValueError(
-                _("Unrecognized value for setting ‘{}’: “{}”{}").format(
-                    self._name, value, addendum,
-                ),
-            )
-        return value
+
+        def _corformidate():
+            _value = value
+            addendum = None
+            try:
+                _value = _typify_and_conform(_value)
+            except Exception as err:
+                addendum = str(err)
+            if addendum is None:
+                addendum = _validate(_value)
+            if addendum is not None:
+                raise ValueError(
+                    _("Unrecognized value for setting ‘{}’: “{}”{}").format(
+                        self._name, value, addendum,
+                    ),
+                )
+            return _value
+
+        def _typify_and_conform(_value):
+            _value = self._typify(value)
+            if self._conform_f:
+                _value = self._conform_f(_value)
+            return _value
+
+        def _validate(_value):
+            # Returns None if valid value, or string if it's not.
+            addendum = None
+            if self._validate_f:
+                try:
+                    # The caller's validate will either raise or return a truthy.
+                    if not self._validate_f(_value):
+                        addendum = ''
+                except Exception as err:
+                    addendum = str(err)
+            elif self._choices:
+                if _value not in self._choices:
+                    addendum = _(' (Choose from: ‘{}’)').format('’, ‘'.join(self._choices))
+            return addendum
+
+        return _corformidate()
 
     # ***
 
