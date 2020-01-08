@@ -360,6 +360,7 @@ class ConfigDecorator(object):
     def _prepare_dict(
         self,
         config,
+        add_ephemeral=False,
         add_hidden=False,
         skip_unset=False,
         use_defaults=False,
@@ -381,7 +382,7 @@ class ConfigDecorator(object):
             for section, conf_dcor in self._sections.items():
                 n_settings += _recurse_section(section, conf_dcor)
             for name, ckv in self._key_vals.items():
-                if ckv.ephemeral:
+                if ckv.ephemeral and not add_ephemeral:
                     continue
                 try:
                     config[name] = choose_default_or_confval(ckv)
@@ -395,6 +396,7 @@ class ConfigDecorator(object):
             subsect = config.setdefault(section, {})
             n_settings = conf_dcor.apply_items(
                 subsect,
+                add_ephemeral=add_ephemeral,
                 add_hidden=add_hidden,
                 skip_unset=skip_unset,
                 use_defaults=use_defaults,
@@ -404,6 +406,13 @@ class ConfigDecorator(object):
             return n_settings
 
         def choose_default_or_confval(ckv):
+            if ckv.ephemeral:
+                # The calculated (ephemeral) value is defined with the ckv
+                # method itself (and not the @settings decorator), which is
+                # accessed through the 'default' value, which will be the
+                # fall-through case for the broader value() method. Note that
+                # `ckv.value` here is essentially `ckv._typify(ckv.default)`.
+                return ckv.value
             if (
                 (use_defaults or (not ckv.persisted and not skip_unset))
                 and (not ckv.hidden or add_hidden)
