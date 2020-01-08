@@ -341,11 +341,13 @@ class ConfigDecorator(object):
 
     # ***
 
-    def as_dict(self):
+    def as_dict(self, **kwargs):
         """Returns a new dict representing the configuration settings tree.
+
+        Args: Same as for download_to_dict().
         """
         newd = {}
-        self.download_to_dict(newd)
+        self.download_to_dict(newd, **kwargs)
         return newd
 
     def download_to_dict(
