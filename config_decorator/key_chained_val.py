@@ -50,7 +50,7 @@ class KeyChainedValue(object):
         ephemeral=False,
         hidden=False,
         validate=None,
-        conform_value=None,
+        conform=None,
     ):
         """Inits a :class:`KeyChainedValue` object.
 
@@ -107,7 +107,7 @@ class KeyChainedValue(object):
             validate: An optional function to validate the value when set
                       from user input. If the validate function returns a
                       falsey value, setting the value raises ``ValueError``.
-            conform_value: If set, function used to translate config value to
+            conform: If set, function used to translate config value to
                            value used internally. Useful for datetime, etc.
         """
         self._section = section
@@ -118,7 +118,7 @@ class KeyChainedValue(object):
         self._ephemeral = ephemeral
         self._hidden = hidden
         self._validate_f = validate
-        self._conform_f = conform_value
+        self._conform_f = conform
 
         self._value_type = self._deduce_value_type(value_type)
         self._value_allow_none = allow_none
@@ -146,7 +146,7 @@ class KeyChainedValue(object):
         if value_type is not None:
             # Caller can specify, say, a function to do type conversion,
             # but they're encouraged to stick to builtin types, and to
-            # use conform_value if they need to change values on input.
+            # use `conform` if they need to change values on input.
             return value_type
         elif self.ephemeral:
             return lambda val: val

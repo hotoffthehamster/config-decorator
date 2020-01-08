@@ -88,9 +88,9 @@ def generate_config_root():
         @property
         @RootSection.setting(
             "Value Type test.",
-            conform_value=some_value_conversation,
+            conform=some_value_conversation,
         )
-        def conform_value_test(self):
+        def conform_test(self):
             return '1'
 
         # ***
