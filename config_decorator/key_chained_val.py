@@ -50,6 +50,7 @@ class KeyChainedValue(object):
         ephemeral=False,
         hidden=False,
         validate=None,
+        conform_value=None,
     ):
         """Inits a :class:`KeyChainedValue` object.
 
@@ -99,13 +100,15 @@ class KeyChainedValue(object):
             ephemeral: If True, the setting is meant not to be persisted
                        between sessions (e.g., ``ephemeral`` settings are
                        excluded on a call to
-                       :meth:`config_decorator.config_decorator.ConfigDecorator.download_to_dict`
+                       :meth:`config_decorator.config_decorator.ConfigDecorator.apply_items`
                        .)
             hidden: If True, the setting is excluded from an output operation
                     if the value is the same as the setting's default value.
             validate: An optional function to validate the value when set
                       from user input. If the validate function returns a
                       falsey value, setting the value raises ``ValueError``.
+            conform_value: If set, function used to translate config value to
+                           value used internally. Useful for datetime, etc.
         """
         self._section = section
         self._name = name
@@ -115,6 +118,7 @@ class KeyChainedValue(object):
         self._ephemeral = ephemeral
         self._hidden = hidden
         self._validate_f = validate
+        self._conform_f = conform_value
 
         self._value_type = self._deduce_value_type(value_type)
         self._value_allow_none = allow_none
@@ -140,6 +144,9 @@ class KeyChainedValue(object):
 
     def _deduce_value_type(self, value_type=None):
         if value_type is not None:
+            # Caller can specify, say, a function to do type conversion,
+            # but they're encouraged to stick to builtin types, and to
+            # use conform_value if they need to change values on input.
             return value_type
         elif self.ephemeral:
             return lambda val: val
@@ -208,6 +215,12 @@ class KeyChainedValue(object):
         """Returns True if the setting value was set via :meth:`value_from_config`.
         """
         return hasattr(self, '_val_config')
+
+    def _conform(self, value):
+        value = self._typify(value)
+        if self._conform_f:
+            value = self._conform_f(value)
+        return value
 
     def _typify(self, value):
         if self._value_allow_none and value is None:
@@ -289,7 +302,7 @@ class KeyChainedValue(object):
         except AttributeError:
             pass
         # Nothing found so far! Finally just return the default value.
-        return self._typify(self.default)
+        return self._value_conform_and_validate(self.default)
 
     @value.setter
     def value(self, value):
@@ -301,16 +314,18 @@ class KeyChainedValue(object):
                    i.e., this method is an alias to
                    the :meth:`value_from_config` setter.
         """
-        value = self._value_cast_and_validate(value)
+        orig_value = value
+        value = self._value_conform_and_validate(value)
         # Using the `value =` shortcut, or using `section['key'] = `,
         # is provided as a convenient way to inject values from the
         # config file, or that the user wishes to set in the file.
         # If the caller wants to just override the value, consider
         # setting self.value_from_forced instead.
         self.value_from_config = value
+        self._val_origin = orig_value
 
-    def _value_cast_and_validate(self, value):
-        value = self._typify(value)
+    def _value_conform_and_validate(self, value):
+        value = self._conform(value)
         invalid = False
         addendum = ''
         if self._validate_f:
@@ -343,7 +358,7 @@ class KeyChainedValue(object):
         Args:
             value_from_forced: The forced setting value.
         """
-        self._val_forced = self._typify(value_from_forced)
+        self._val_forced = self._value_conform_and_validate(value_from_forced)
 
     # ***
 
@@ -360,7 +375,7 @@ class KeyChainedValue(object):
         Args:
             value_from_cliarg: The forced setting value.
         """
-        self._val_cliarg = self._typify(value_from_cliarg)
+        self._val_cliarg = self._value_conform_and_validate(value_from_cliarg)
 
     # ***
 
@@ -385,7 +400,7 @@ class KeyChainedValue(object):
             self._name.upper(),
         )
         envval = os.environ[environame]
-        envval = self._value_cast_and_validate(envval)
+        envval = self._value_conform_and_validate(envval)
         return envval
 
     # ***
@@ -403,7 +418,9 @@ class KeyChainedValue(object):
         Args:
             value_from_config: The forced setting value.
         """
-        self._val_config = self._typify(value_from_config)
+        orig_value = value_from_config
+        self._val_config = self._value_conform_and_validate(value_from_config)
+        self._val_origin = orig_value
 
     def forget_config_value(self):
         """Removes the "config" setting value set by the :meth:`value_from_config` setter.
@@ -413,10 +430,25 @@ class KeyChainedValue(object):
         except AttributeError:
             pass
 
+    # ***
+
+    @property
+    def value_stringify(self):
+        """Returns the storable config value, generally just the stringified value."""
+        try:
+            # Prefer the config value as original input, i.e., try to keep
+            # the output same as user's input. But still cast to string.
+            # Mostly just avoid whatever self.conform_f may have done.
+            return str(self._val_origin)
+        except AttributeError:
+            # No config value set, so stringify the most prominent value.
+            return str(self.value)
+
+    # ***
+
     @property
     def asobj(self):
         """Returns self, behaving as identify function (need to quack like ``ConfigDecorator``).
         """
         return self
-
 

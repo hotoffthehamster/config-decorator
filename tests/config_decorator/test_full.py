@@ -80,7 +80,7 @@ def generate_config_root():
 
         # ***
 
-        def some_type_conversation(value):
+        def some_value_conversation(value):
             if isinstance(value, int):
                 return value
             return int(value) + 100
@@ -88,9 +88,9 @@ def generate_config_root():
         @property
         @RootSection.setting(
             "Value Type test.",
-            value_type=some_type_conversation,
+            conform_value=some_value_conversation,
         )
-        def value_type_test(self):
+        def conform_value_test(self):
             return '1'
 
         # ***
