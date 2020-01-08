@@ -170,7 +170,7 @@ Here's a simple example:
     # to persist settings keys and values to disk using another package.
     from configobj import ConfigObj
     saved_cfg = ConfigObj('path/to/persisted/settings')
-    cfgroot.download_to_dict(saved_cfg)
+    cfgroot.apply_items(saved_cfg)
     saved_cfg.write()
 
     # Likewise, values can be read from a dictionary, which makes loading

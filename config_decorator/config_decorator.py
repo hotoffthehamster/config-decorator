@@ -344,14 +344,25 @@ class ConfigDecorator(object):
     def as_dict(self, **kwargs):
         """Returns a new dict representing the configuration settings tree.
 
-        Args: Same as for download_to_dict().
+        Args: Same as for _prepare_dict().
         """
         newd = {}
-        self.download_to_dict(newd, **kwargs)
+        self._prepare_dict(newd, **kwargs)
         return newd
 
-    def download_to_dict(
-        self, config, skip_unset=False, use_defaults=False, add_hidden=False,
+    def apply_items(self, config, **kwargs):
+        """Prepares the passed dict with the config, stringifying values by default.
+
+        Args: Same as for _prepare_dict().
+        """
+        return self._prepare_dict(config, **kwargs)
+
+    def _prepare_dict(
+        self,
+        config,
+        skip_unset=False,
+        use_defaults=False,
+        add_hidden=False,
     ):
         """Updates the passed dict with all configuration settings.
 
@@ -365,7 +376,7 @@ class ConfigDecorator(object):
         Returns:
             The number of settings updated or added to the "config" dict.
         """
-        def _download_to_dict():
+        def _prepare_items():
             n_settings = 0
             for section, conf_dcor in self._sections.items():
                 n_settings += _recurse_section(section, conf_dcor)
@@ -382,7 +393,7 @@ class ConfigDecorator(object):
         def _recurse_section(section, conf_dcor):
             existed = section in config
             subsect = config.setdefault(section, {})
-            n_settings = conf_dcor.download_to_dict(subsect)
+            n_settings = conf_dcor._prepare_dict(subsect)
             if not n_settings and not existed:
                 del config[section]
             return n_settings
@@ -397,7 +408,7 @@ class ConfigDecorator(object):
                 return ckv.value_from_config
             raise AttributeError()
 
-        return _download_to_dict()
+        return _prepare_items()
 
     # ***
 

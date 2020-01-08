@@ -409,7 +409,8 @@ class TestConfigDecoratorDownloadToDict:
             'test: return ckv.value_from_config'
         )
         cfgdict = {}
-        rootcfg.download_to_dict(cfgdict)
+        rootcfg.apply_items(cfgdict)
+        assert cfgdict == rootcfg.as_dict(use_stringify=True)
 
 
 # ***
