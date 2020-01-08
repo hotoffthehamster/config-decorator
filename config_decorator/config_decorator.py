@@ -554,7 +554,7 @@ class ConfigDecorator(object):
         def setsetting(setting_name, setting_value, *section_names):
             conf_dcor = self
             for section_name in section_names:
-                conf_dcor = getsection(conf_dcor, section_name)
+                conf_dcor = ConfigDecorator.getsection(conf_dcor, section_name)
             if setting_name in conf_dcor._key_vals:
                 # Unlike the method name might imply (set-DEFAULT), we don't
                 # actually set the KeyChainedValue default. We simple ensure
@@ -570,21 +570,22 @@ class ConfigDecorator(object):
             self._key_vals[ckv.name] = ckv
             return setting_value
 
-        def getsection(conf_dcor, section_name):
-            try:
-                sub_dcor = conf_dcor._sections[section_name]
-            except KeyError:
-                # Normally created by the @section decorator,
-                # but also by a setdefault, for whyever. (To
-                # appease Nark, so it can treat ConfigDecorator
-                # like dict of dicts.)
-                cls = object
-                cls_or_name = section_name
-                sub_dcor = ConfigDecorator(cls, cls_or_name, parent=conf_dcor)
-                conf_dcor._sections[section_name] = sub_dcor
-            return sub_dcor
-
         return _setdefault()
+
+    @classmethod
+    def getsection(_cls, conf_dcor, section_name):
+        try:
+            sub_dcor = conf_dcor._sections[section_name]
+        except KeyError:
+            # Normally created by the @section decorator,
+            # but also by a setdefault, for whyever. (To
+            # appease Nark, so it can treat ConfigDecorator
+            # like dict of dicts.)
+            cls = object
+            cls_or_name = section_name
+            sub_dcor = ConfigDecorator(cls, cls_or_name, parent=conf_dcor)
+            conf_dcor._sections[section_name] = sub_dcor
+        return sub_dcor
 
     # ***
 
