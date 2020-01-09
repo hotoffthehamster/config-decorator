@@ -120,8 +120,8 @@ class KeyChainedValue(object):
         self._validate_f = validate
         self._conform_f = conform
 
-        self._value_type = self._deduce_value_type(value_type)
         self._value_allow_none = allow_none
+        self._value_type = self._deduce_value_type(value_type)
 
         # These attributes will only be set if some particular
         # source specifies a value:
@@ -155,6 +155,13 @@ class KeyChainedValue(object):
     def _deduce_default_type(self):
         default_value = self.default
         if default_value is None:
+            # If user wrote default method to return None, then obviously
+            # implicitly the setting allows the None value.
+            self._value_allow_none = True
+            # Furthermore, the value type is implicitly whatever, because
+            # the user did not specify the type of None that is the default.
+            # So rather than assume, the type function is just the identity.
+            # (The user cat set value_type to be explicit about the type.
             return lambda val: val
         elif isinstance(default_value, bool):
             return bool
