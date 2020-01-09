@@ -370,7 +370,9 @@ class KeyChainedValue(object):
                     addendum = str(err)
             elif self._choices:
                 if _value not in self._choices:
-                    addendum = _(' (Choose from: ‘{}’)').format('’, ‘'.join(self._choices))
+                    addendum = _(' (Choose from: ‘{}’)').format(
+                        '’, ‘'.join(self._choices)
+                    )
             return addendum
 
         return _corformidate()
