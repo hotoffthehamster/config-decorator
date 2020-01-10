@@ -590,22 +590,19 @@ class ConfigDecorator(object):
     # ***
 
     def keys(self):
-        """Returns a list of settings names.
+        """Returns a list of the top-level section and settings names.
         """
-        # MAYBE/2019-11-30: (lb): What about self._sections??
-        return self._key_vals.keys()
+        return self.as_dict().keys()
 
     def values(self):
-        """Returns a list of settings values.
+        """Returns a list of sub-section branches and top-level settings values.
         """
-        # MAYBE/2019-11-30: (lb): What about self._sections??
-        return [v.value for v in self._key_vals.values()]
+        return self.as_dict().values()
 
     def items(self):
-        """Returns a dictionary of setting key names → values.
+        """Returns dict of section names → subsections, and setting names → values.
         """
-        # MAYBE/2019-11-30: (lb): What about self._sections??
-        return {k: v.value for k, v in self._key_vals.items()}
+        return self.as_dict().items()
 
     # ***
 
