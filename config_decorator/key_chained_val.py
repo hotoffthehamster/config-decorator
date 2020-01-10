@@ -387,6 +387,14 @@ class KeyChainedValue(object):
     # ***
 
     @property
+    def value_from_default(self):
+        """Returns the conformed default value.
+        """
+        return self._value_conform_and_validate(self.default)
+
+    # ***
+
+    @property
     def value_from_forced(self):
         """Returns the "forced" setting value.
         """

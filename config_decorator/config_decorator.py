@@ -422,7 +422,9 @@ class ConfigDecorator(object):
                 (use_defaults or (not ckv.persisted and not skip_unset))
                 and (not ckv.hidden or add_hidden)
             ):
-                return ckv.default
+                # ckv.default is the non-conformed input value;
+                # we want the value after it's been internalized.
+                return ckv.value_from_default
             elif not use_defaults and ckv.persisted:
                 return ckv.value_from_config
             raise AttributeError()
