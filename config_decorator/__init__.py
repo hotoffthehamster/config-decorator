@@ -33,9 +33,11 @@ Root module package-level alias to :func:`config_decorator.config_decorator.sect
 """
 
 from .config_decorator import section, ConfigDecorator
+from .key_chained_val import KeyChainedValue
 
 __all__ = (
     'section',
     'ConfigDecorator',
+    'KeyChainedValue',
 )
 
