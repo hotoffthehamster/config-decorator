@@ -335,9 +335,9 @@ class KeyChainedValue(object):
         # Using the `value =` shortcut, or using `section['key'] = `,
         # is provided as a convenient way to inject values from the
         # config file, or that the user wishes to set in the file.
-        # If the caller wants to just override the value, consider
-        # setting self.value_from_forced instead.
-        self.value_from_config = value
+        # Don't call the wrapper, which would call conform-validate again.
+        #   NOPE: self.value_from_config = value
+        self._val_config = value
         self._val_origin = orig_value
 
     def _value_conform_and_validate(self, value):
