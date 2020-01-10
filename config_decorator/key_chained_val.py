@@ -345,12 +345,13 @@ class KeyChainedValue(object):
         def _corformidate():
             _value = value
             addendum = None
-            try:
-                _value = _typify_and_conform(_value)
-            except Exception as err:
-                addendum = str(err)
             if addendum is None:
                 addendum = _validate(_value)
+            if addendum is None:
+                try:
+                    _value = _typify_and_conform(_value)
+                except Exception as err:
+                    addendum = str(err)
             if addendum is not None:
                 raise ValueError(
                     _("Unrecognized value for setting ‘{}’: “{}”{}").format(
