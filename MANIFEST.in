@@ -14,7 +14,7 @@
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
 
-graft config_decortor
+graft config_decorator
 
 # We could include specific files, e.g.,
 #   include docs/*.rst
@@ -26,7 +26,7 @@ prune docs/_build
 prune docs/_static
 # Ignore Sphinx-/`make docs`-generated files.
 exclude docs/modules.rst
-recursive-exclude docs config_decortor*.rst
+recursive-exclude docs config_decorator*.rst
 
 include LICENSE
 include Makefile
