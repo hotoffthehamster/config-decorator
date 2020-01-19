@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+
 # Part of project: https://github.com/hotoffthehamster/config-decorator
-# Copyright © 2019 Landon Bouma. All rights reserved.
+# Copyright © 2019-2020 Landon Bouma. All rights reserved.
 #
 # This program is free software:  you can redistribute it and/or modify
 # it  under  the  terms  of  the  GNU Affero General Public License  as

@@ -1,5 +1,5 @@
 # Part of project: https://github.com/hotoffthehamster/config-decorator
-# Copyright © 2019 Landon Bouma. All rights reserved.
+# Copyright © 2019-2020 Landon Bouma. All rights reserved.
 #
 # This program is free software:  you can redistribute it and/or modify
 # it  under  the  terms  of  the  GNU Affero General Public License  as
@@ -13,6 +13,7 @@
 #
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
+
 """Class @decorator for defining exquisite settings configurations.
 
 Concepts
