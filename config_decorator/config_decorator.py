@@ -128,8 +128,6 @@ example, ``@RootSectionBar.setting`` was used inside ``BarSubsectionBaz``.)
       I.e., you cannot call ``obj = RootSection()``.
 """
 
-from __future__ import absolute_import, unicode_literals
-
 import inspect
 from collections import OrderedDict
 from functools import update_wrapper

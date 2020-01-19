@@ -14,8 +14,6 @@
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, unicode_literals
-
 import pytest
 
 from config_decorator import section
