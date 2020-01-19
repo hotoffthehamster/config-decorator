@@ -13,8 +13,8 @@
 #
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
-"""Defines a class to manage a key-value setting.
-"""
+
+"""Class to manage key-value settings."""
 
 from __future__ import absolute_import, unicode_literals
 

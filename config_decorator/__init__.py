@@ -14,8 +14,7 @@
 # If you lost the GNU Affero General Public License that ships with
 # this code (the 'LICENSE' file), see <http://www.gnu.org/licenses/>.
 
-"""
-Root module package-level alias to :func:`config_decorator.config_decorator.section`.
+"""Root module package-level alias to :func:`config_decorator.config_decorator.section`.
 
 - So you can call, e.g.,
 
