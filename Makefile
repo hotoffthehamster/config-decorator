@@ -85,6 +85,10 @@ clean-pyc:
 
 clean-docs:
 	$(MAKE) -C docs clean BUILDDIR=$(BUILDDIR)
+	git ls-files docs --ignored --exclude-standard --others | while read file; do \
+		echo "Removing: $$file"; \
+		/bin/rm $$file; \
+	done
 
 clean-test:
 	/bin/rm -fr .tox/
