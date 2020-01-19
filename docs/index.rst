@@ -5,8 +5,11 @@ config-decorator Documentation
 .. |dob| replace:: ``dob``
 .. _dob: https://github.com/hotoffthehamster/dob
 
-User configuration framework developed for |dob|_,
-but suitable for your next project!
+.. |nark| replace:: ``nark``
+.. _nark: https://github.com/hotoffthehamster/nark
+
+User configuration framework developed for |nark|_ and |dob|_,
+but potentially suitable for your next project!
 
 .. toctree::
    :maxdepth: 4
