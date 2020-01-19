@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # Part of project: https://github.com/hotoffthehamster/config-decorator
 # Copyright © 2019 Landon Bouma. All rights reserved.
 #
