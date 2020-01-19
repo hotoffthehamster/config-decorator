@@ -3,7 +3,8 @@ LICENSE
 #######
 
 ``config-decorator`` is
-copyright © 2019 Landon Bouma, HotOffThe Hamster, & contributors. All rights reserved.
+copyright © 2019-2020 Landon Bouma, HotOffThe Hamster, & contributors.
+All rights reserved.
 
 The ``config-decorator`` source code is free software:
 you can redistribute it and/or modify it
