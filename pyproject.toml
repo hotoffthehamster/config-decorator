@@ -2,7 +2,7 @@
 #
 #   https://github.com/hotoffthehamster/config-decorator
 
-# (lb): Including this file just to be pedantic.
+# (lb): Including this file to be pedantic.
 
 [build-system]
 requires = ["setuptools", "wheel"]
