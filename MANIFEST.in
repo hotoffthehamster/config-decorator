@@ -19,7 +19,6 @@ recursive-exclude docs config_decorator*.rst
 include LICENSE
 include Makefile
 include *.rst
-include HISTORY.md
 include pyproject.toml
 include setup.cfg
 include setup.py
