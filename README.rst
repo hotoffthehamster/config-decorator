@@ -39,7 +39,6 @@ config-decorator User Options Framework
 .. |ConfigObj| replace:: ``ConfigObj``
 .. _ConfigObj: https://github.com/DiffSK/configobj
 
-
 User configuration framework developed for |dob|_.
 
 ========
