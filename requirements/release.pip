@@ -10,6 +10,12 @@ check-manifest >= 0.40
 #   https://gitlab.com/pycqa/flake8
 flake8 >= 3.7.9
 
+# - "Render local readme files before sending off to GitHub"
+#   - For verifying docs/history-ci.md.
+#
+#   https://github.com/joeyespo/grip
+grip >= 4.5.2
+
 # - "utility / library to sort Python imports"
 #
 #   https://github.com/timothycrosley/isort
