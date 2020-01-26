@@ -10,7 +10,7 @@ dist/
 
 # Byte-compiled/Optimized Python and Library/DLL files.
 *.py[cod]
-__pycache__
+__pycache__/
 
 # Testing and CI tasks.
 .pytest_cache/
@@ -23,12 +23,16 @@ htmlcov/
 # pytest-cov / coverage / https://codecov.io
 coverage.xml
 
-# In lieu of a personalizable, secondary Grep/Silver Searcher/RipGrep ignore,
-# like .gitignore's .git/info/exclude, the repo contains an .ignore.example.
+# Akin to .gitignore's private .git/info/exclude, this repo includes an
+# .ignore.example file DEV might want to copy as .ignore and customize.
 .ignore
+
+# Optional private DEV Makefile.
+Makefile.local
+
+# Sphinx docs/ (from `make docs`):
+docs/_build/
 
 # Translations
 *.mo
-
-docs/_build
 
