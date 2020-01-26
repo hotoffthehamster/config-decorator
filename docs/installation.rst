@@ -19,7 +19,7 @@ To install user-local, simply run::
 To install within a |virtualenv|_, try::
 
     $ mkvirtualenv config-decorator
-    $ pip install config-decorator
+    (config-decorator) $ pip install config-decorator
 
 To develop on the project, link to the source files instead::
 
@@ -28,7 +28,7 @@ To develop on the project, link to the source files instead::
     $ git clone git@github.com:hotoffthehamster/config-decorator.git
     $ cd config-decorator
     $ mkvirtualenv -a $(pwd) --python=/usr/bin/python3.7 config-decorator
-    $ make develop
+    (config-decorator) $ make develop
 
 After creating the virtual environment,
 to start developing from a fresh terminal, run |workon|_::
