@@ -10,6 +10,11 @@ History
 
 .. :changelog:
 
+1.0.0 (2020-01-25)
+==================
+
+- DX: Release process improvements (no new features).
+
 0.4.0 (2020-01-19)
 ==================
 
