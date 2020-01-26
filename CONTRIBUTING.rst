@@ -124,7 +124,8 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
 
 1. Fork the |config-decorator|_ repo on GitHub.
 
-   * Visit `<https://github.com/hotoffthehamster/config-decorator>`__ and click *Fork*.
+   * Visit `<https://github.com/hotoffthehamster/config-decorator>`__
+     and click *Fork*.
 
 2. Clone your fork locally.
 
@@ -133,7 +134,8 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
 
     $ git clone git@github.com:<your_login>/config-decorator.git
 
-3. Install |config-decorator|_ into a Python virtual instance, or |virtualenv|_.
+3. Install |config-decorator|_ into a Python virtual instance,
+   or |virtualenv|_.
 
    First, ensure that you have |virtualenvwrapper|_ installed.
 
@@ -143,7 +145,8 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
     $ mkvirtualenv -a $(pwd) config-decorator
 
    *Note:* We use the ``-a`` option so that ``cdproject`` changes directories
-   to the ``config-decorator/`` directory when we're in the virtual environment.
+   to the ``config-decorator/`` directory when we're in the virtual
+   environment.
 
    Next, set up your fork for local development::
 
@@ -337,7 +340,8 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
    .. _rebase_atop_develop:
 
 10. Finally,
-    `submit a pull request <https://github.com/hotoffthehamster/config-decorator/pulls>`_
+    `submit a pull request
+    <https://github.com/hotoffthehamster/config-decorator/pulls>`_
     through the GitHub website.
 
     *Important:* Please rebase your code against ``develop`` and resolve
