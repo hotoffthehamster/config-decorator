@@ -1,5 +1,8 @@
-# Makefile for Sphinx documentation
+# This file exists within 'config-decorator':
 #
+#   https://github.com/hotoffthehamster/config-decorator
+
+# Makefile for Sphinx documentation
 
 # You can set these variables from the command line.
 SPHINXOPTS    =

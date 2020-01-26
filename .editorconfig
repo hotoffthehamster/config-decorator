@@ -1,4 +1,14 @@
-# http://editorconfig.org
+# This file exists within 'config-decorator':
+#
+#   https://github.com/hotoffthehamster/config-decorator
+
+# USAGE: Install an http://editorconfig.org plugin; profit.
+#
+#        Consider, for example:
+#
+#        - EditorConfig Vim Plugin
+#
+#          https://github.com/editorconfig/editorconfig-vim
 
 root = true
 

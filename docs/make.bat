@@ -1,5 +1,9 @@
 @ECHO OFF
 
+REM This file exists within 'config-decorator':
+REM
+REM   https://github.com/hotoffthehamster/config-decorator
+
 REM Command file for Sphinx documentation
 
 if "%SPHINXBUILD%" == "" (

@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 
-# Boilerplate documentation build configuration file, created by
-# sphinx-quickstart on Tue Jul  9 22:26:36 2013.
+# This file exists within 'config-decorator':
+#
+#   https://github.com/hotoffthehamster/config-decorator
+
+# Boilerplate documentation build configuration file,
+# (Originally) created by sphinx-quickstart on Tue Jul 9 22:26:36 2013
+# (and since somewhat modified to a make more palatable boilerplate).
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.

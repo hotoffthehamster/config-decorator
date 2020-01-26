@@ -1,3 +1,7 @@
+# This file exists within 'config-decorator':
+#
+#   https://github.com/hotoffthehamster/config-decorator
+
 codecov:
   branch: develop
   # (lb): With setting disable_default_path_fixes, I see:

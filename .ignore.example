@@ -1,4 +1,9 @@
+# This file exists within 'config-decorator':
+#
+#   https://github.com/hotoffthehamster/config-decorator
+
 # USAGE: `/bin/cp .ignore.example .ignore` and personalize.
+
 .git/
 
 *.egg-info/
