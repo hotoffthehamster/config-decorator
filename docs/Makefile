@@ -4,6 +4,8 @@
 
 # Makefile for Sphinx documentation
 
+PROJNAME = config-decorator
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
@@ -88,17 +90,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/nark.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/$(PROJNAME).qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/nark.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/$(PROJNAME).qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/nark"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/nark"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/$(PROJNAME)"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/$(PROJNAME)"
 	@echo "# devhelp"
 
 epub:
