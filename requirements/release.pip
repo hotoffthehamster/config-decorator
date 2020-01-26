@@ -1,11 +1,42 @@
 # Specifies packages required to develop and release, except test packages.
 
-check-manifest >= 0.37
-flake8 >= 3.7.5
-isort >= 4.3.4
-setuptools >= 38.6.0
-setuptools_scm
-tox >= 3.14.0
-twine >= 1.11.0
-wheel >= 0.31.0
+# - "Check MANIFEST.in ... for completeness"
+#
+#   https://github.com/mgedmin/check-manifest
+check-manifest >= 0.40
+
+# - "the modular source code checker: pep8, pyflakes and co"
+#
+#   https://gitlab.com/pycqa/flake8
+flake8 >= 3.7.9
+
+# - "utility / library to sort Python imports"
+#
+#   https://github.com/timothycrosley/isort
+isort >= 4.3.21
+
+# - "Easily download, build, install, upgrade, and uninstall Python packages"
+#
+#   https://setuptools.readthedocs.io/en/latest/
+setuptools >= 45.1.0
+
+# - "the blessed package to manage your versions by scm tags"
+#
+#   https://github.com/pypa/setuptools_scm/
+setuptools_scm >= 3.4.3
+
+# - "generic virtualenv management and test command line tool"
+#
+#   https://tox.readthedocs.io/en/latest/
+tox >= 3.14.3
+
+# - "Collection of utilities for publishing packages on PyPI"
+#
+#   https://twine.readthedocs.io/en/latest/
+twine >= 3.1.1
+
+# - "A built-package format for Python."
+#
+#   https://github.com/pypa/wheel
+wheel >= 0.33.6
 
