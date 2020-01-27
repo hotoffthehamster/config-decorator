@@ -143,6 +143,7 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
 
     $ cd config-decorator/
     $ mkvirtualenv -a $(pwd) config-decorator
+    (config-decorator) $
 
    *Note:* We use the ``-a`` option so that ``cdproject`` changes directories
    to the ``config-decorator/`` directory when we're in the virtual
