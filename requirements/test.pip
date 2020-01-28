@@ -15,8 +15,6 @@ pytest-mock >= 2.0.0
 
 # *** Coverage
 
-# EXPLAIN/2020-01-26: (lb): Do we need both coverage and pytest-cov?
-
 # - "Code coverage measurement for Python"
 #   2020-01-26: Itself with 94.00% coverage.
 #
