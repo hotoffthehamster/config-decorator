@@ -376,10 +376,12 @@ class ConfigDecorator(object):
 
         Args:
             config: The dict to update.
+            add_ephemeral: Set True to include settings marked 'ephemeral'.
+            add_hidden: Set True to include settings with the "hidden" property set.
             skip_unset: Set True to exclude settings that do not have a value
                         set from the "config" source.
             use_defaults: Set True to use the default value for every setting.
-            add_hidden: Set True to include settings with the "hidden" property set.
+            use_stringify: Set True to use the default value for every setting.
 
         Returns:
             The number of settings updated or added to the "config" dict.
