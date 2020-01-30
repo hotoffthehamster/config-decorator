@@ -506,3 +506,56 @@ class KeyChainedValue(object):
         """
         return self
 
+    # ***
+
+    @property
+    def source(self):
+        """Returns the setting value source.
+
+        Returns:
+
+            The name of the highest priority source,
+            as determined by the order of this list:
+
+            - If the setting value was forced,
+              by a call to the :meth:`value_from_forced` setter,
+              the value 'forced' is returned.
+
+            - If the setting value was read from a command line argument,
+              by a call to the :meth:`value_from_cliarg` setter,
+              the value 'cliarg' is returned.
+
+            - If the setting value was read from an environment variable,
+              by a call to the :meth:`value_from_envvar` setter,
+              the value 'envvar' is returned.
+
+            - If the setting value was read from the dictionary source,
+              by a call to the :meth:`value` or :meth:`value_from_config` setters,
+              the value 'config' is returned.
+
+            - Finally, if a value was not obtained from any of the above
+              sources, the value 'default' is returned.
+        """
+        # Honor forced values foremost.
+        try:
+            return self.value_from_forced and 'forced'
+        except AttributeError:
+            pass
+        # Honor CLI-specific values secondmost.
+        try:
+            return self.value_from_cliarg and 'cliarg'
+        except AttributeError:
+            pass
+        # Check the environment third.
+        try:
+            return self.value_from_envvar and 'envvar'
+        except KeyError:
+            pass
+        # See if the config value was specified by the config that was read.
+        try:
+            return self.value_from_config and 'config'
+        except AttributeError:
+            pass
+        # Nothing found so far! Finally just return the default value.
+        return 'default'
+
