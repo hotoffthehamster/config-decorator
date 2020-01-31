@@ -414,7 +414,7 @@ class TestConfigDecoratorDownloadToDict:
         )
         cfgdict = {}
         rootcfg.apply_items(cfgdict)
-        assert cfgdict == rootcfg.as_dict(use_stringify=True)
+        assert cfgdict == rootcfg.as_dict(unmutated=True)
 
 
 # ***

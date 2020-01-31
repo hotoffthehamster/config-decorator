@@ -360,7 +360,7 @@ class ConfigDecorator(object):
 
         Args: Same as for _prepare_dict().
         """
-        kwargs.setdefault('use_stringify', True)
+        kwargs.setdefault('unmutated', True)
         return self._prepare_dict(config, **kwargs)
 
     def _prepare_dict(
@@ -370,7 +370,7 @@ class ConfigDecorator(object):
         add_hidden=False,
         skip_unset=False,
         use_defaults=False,
-        use_stringify=False,
+        unmutated=False,
     ):
         """Updates the passed dict with all configuration settings.
 
@@ -381,7 +381,7 @@ class ConfigDecorator(object):
             skip_unset: Set True to exclude settings that do not have a value
                         set from the "config" source.
             use_defaults: Set True to use the default value for every setting.
-            use_stringify: Set True to use the default value for every setting.
+            unmutated: Set True to use the default value for every setting.
 
         Returns:
             The number of settings updated or added to the "config" dict.
@@ -409,15 +409,15 @@ class ConfigDecorator(object):
                 add_hidden=add_hidden,
                 skip_unset=skip_unset,
                 use_defaults=use_defaults,
-                use_stringify=use_stringify,
+                unmutated=unmutated,
             )
             if not n_settings and not existed:
                 del config[section]
             return n_settings
 
         def choose_default_or_confval(ckv):
-            if use_stringify:
-                return ckv.value_stringify
+            if unmutated:
+                return ckv.value_unmutated
             if ckv.ephemeral:
                 # The calculated (ephemeral) value is defined with the ckv
                 # method itself (and not the @settings decorator), which is

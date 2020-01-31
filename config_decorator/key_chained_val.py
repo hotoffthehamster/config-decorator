@@ -487,7 +487,7 @@ class KeyChainedValue(object):
     # ***
 
     @property
-    def value_stringify(self):
+    def value_unmutated(self):
         """Returns the storable config value, generally just the stringified value."""
         try:
             # Prefer the config value as original input, i.e., try to keep
