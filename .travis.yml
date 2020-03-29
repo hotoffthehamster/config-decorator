@@ -35,10 +35,9 @@ matrix:
     # - Lint code (flake8).
     - env: TOXENV=flake8
       python: '3.8'
-    # (lb): Enable this task, should you ever clean up docstrings:
-    #   # - Verify docstring conventions.
-    #   - env: TOXENV=pep257
-    #     python: '3.8'
+    # - Verify docstring conventions (née pep257).
+    - env: TOXENV=pydocstyle
+      python: '3.8'
 
 install:
   - pip install -U tox

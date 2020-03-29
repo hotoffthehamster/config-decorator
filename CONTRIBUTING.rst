@@ -493,21 +493,10 @@ by running various developer tasks.
    .. code-block:: Bash
 
       # Run the docstrings linter:
-      $ tox -e pep257
+      $ tox -e pydocstyle
 
       # Generate the reST docs (peruse the output for errors and warnings):
       $ make docs
-
-.. note:: Not all of this author's projects adhere that well to docstrings
-          convention, so pep257-compliance is not mandatory. Generally, the
-          module docs still build! Also, this author values tests, coverage,
-          and readable code over spending time fleshing out docstrings (which
-          could be a waste of time during development, as code changes quickly!
-          but then there's usually "no time" after development, so we often find
-          ourselves with imperfect docstrings littered throughout the code).
-
-          As such, feel free to run the pep257 linter,
-          but also feel free not to. It's noisy.
 
 .. _verify-import-statement-order:
 
