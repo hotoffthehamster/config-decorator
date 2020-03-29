@@ -485,11 +485,11 @@ class ConfigDecorator(object):
         You might find this useful if your app handles arbitrary config.
         In this case, the application cannot define the config in the code,
         because it lets the user use whatever names they want. In that case,
-        load the config into a dict (say, using |ConfigObj|_), and then pass
-        that dictionary to this method.
+        load the config into a dict (say, using |DiffSKConfigObj|_), and
+        then pass that dictionary to this method.
 
-        .. |ConfigObj| replace:: ``ConfigObj``
-        .. _ConfigObj: https://github.com/DiffSK/configobj
+        .. |DiffSKConfigObj| replace:: ``ConfigObj``
+        .. _DiffSKConfigObj: https://github.com/DiffSK/configobj
         """
         # For instance, the ``dob`` application allows the user to define their
         #   own named Pygment styles that can be referenced in a separate config.
