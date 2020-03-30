@@ -134,6 +134,10 @@ example, ``@RootSectionBar.setting`` was used inside ``BarSubsectionBaz``.)
       ``RootSection`` is a :class:`ConfigDecorator` instance
       and not a ``class`` object.
       I.e., you cannot call ``obj = RootSection()``.
+
+.. Note: Avoid Duplicate def: define here, not in method where it's used.
+.. |ConfigObj| replace:: ``ConfigObj``
+.. _ConfigObj: https://github.com/DiffSK/configobj
 """
 
 import inspect
@@ -485,11 +489,8 @@ class ConfigDecorator(object):
         You might find this useful if your app handles arbitrary config.
         In this case, the application cannot define the config in the code,
         because it lets the user use whatever names they want. In that case,
-        load the config into a dict (say, using |DiffSKConfigObj|_), and
+        load the config into a dict (say, using |ConfigObj|_), and
         then pass that dictionary to this method.
-
-        .. |DiffSKConfigObj| replace:: ``ConfigObj``
-        .. _DiffSKConfigObj: https://github.com/DiffSK/configobj
         """
         # For instance, the ``dob`` application allows the user to define their
         #   own named Pygment styles that can be referenced in a separate config.
