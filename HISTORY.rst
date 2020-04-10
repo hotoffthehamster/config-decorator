@@ -10,6 +10,41 @@ History
 
 .. :changelog:
 
+2.0.7 (2020-04-10)
+==================
+
+- Improve: Consistency: Raise on missing key, even when only 1 part specified.
+
+2.0.6 (2020-04-01)
+==================
+
+- Internal: DX improvements.
+
+2.0.5 (2020-04-01)
+==================
+
+- Internal: DX improvements.
+
+2.0.4 (2020-03-30)
+==================
+
+- Internal: DX improvements.
+
+2.0.3 (2020-03-30)
+==================
+
+- Internal: DX and Test improvements.
+
+2.0.2 (2020-03-29)
+==================
+
+- Internal: DX and Test improvements.
+
+2.0.1 (2020-03-29)
+==================
+
+- Internal: DX [Developer Experience] improvements.
+
 2.0.0 (2020-03-29)
 ==================
 
