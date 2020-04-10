@@ -461,14 +461,21 @@ class TestConfigDecoratorFindSettingOkay:
         assert(setting.value == 'bat')
 
 
-class TestConfigDecoratorFindSettingFail:
+class TestConfigDecoratorFindSettingFailOnePart:
     def test_something(self):
         rootcfg = generate_config_root()
-        setting = rootcfg.find_setting(['unknown setting'])
-        assert(setting is None)
+        with pytest.raises(KeyError):
+            rootcfg.find_setting(['unknown setting'])
 
 
-class TestConfigDecoratorFindSettingMany:
+class TestConfigDecoratorFindSettingFailManyParts:
+    def test_something(self):
+        rootcfg = generate_config_root()
+        with pytest.raises(KeyError):
+            rootcfg.find_setting(['unknown setting', 'foo'])
+
+
+class TestConfigDecoratorFindSettingOnePart:
     def test_something(self):
         rootcfg = generate_config_root()
         setting = rootcfg.find_setting(['conflict'])

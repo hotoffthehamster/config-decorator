@@ -648,7 +648,11 @@ class ConfigDecorator(object):
             if not parts:
                 return [self]
             elif len(parts) == 1:
-                objects = self._find_objects_named(parts[0], skip_sections)
+                name = parts[0]
+                objects = self._find_objects_named(name, skip_sections)
+                # Behave same as when len(parts) > 1, and raise on missing.
+                if not objects:
+                    raise KeyError(name)
             else:
                 section_names = parts[:-1]
                 object_name = parts[-1]
