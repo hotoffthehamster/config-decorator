@@ -395,7 +395,10 @@ class ConfigDecorator(object):
             for section, conf_dcor in self._sections.items():
                 n_settings += _recurse_section(section, conf_dcor)
             for name, ckv in self._key_vals.items():
-                if ckv.ephemeral and not add_ephemeral:
+                if (
+                    (ckv.ephemeral and not add_ephemeral)
+                    or (ckv.hidden and not add_hidden)
+                ):
                     continue
                 try:
                     config[name] = choose_default_or_confval(ckv)
