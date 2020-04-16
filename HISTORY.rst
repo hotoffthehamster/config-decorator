@@ -10,6 +10,11 @@ History
 
 .. :changelog:
 
+2.0.8 (2020-04-15)
+==================
+
+- Bugfix: Filter hidden items unless requested.
+
 2.0.7 (2020-04-10)
 ==================
 

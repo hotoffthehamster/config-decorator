@@ -2,6 +2,10 @@
 
 [comment]: # DEV: release-ghub-pypi scrapes Markdown from the first section below for the GitHub release.
 
+## 2.0.8 (2020-04-15)
+
+- Bugfix: Filter hidden items unless requested.
+
 ## 2.0.7 (2020-04-10)
 
 - Improve: Consistency: Raise on missing key, even when only 1 part specified.
