@@ -10,6 +10,11 @@ History
 
 .. :changelog:
 
+2.0.9 (2020-04-17)
+==================
+
+- Feature: Add method to delete unused settings.
+
 2.0.8 (2020-04-15)
 ==================
 

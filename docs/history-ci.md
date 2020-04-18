@@ -2,6 +2,10 @@
 
 [comment]: # DEV: release-ghub-pypi scrapes Markdown from the first section below for the GitHub release.
 
+## 2.0.9 (2020-04-17)
+
+- Feature: Add method to delete unused settings.
+
 ## 2.0.8 (2020-04-15)
 
 - Bugfix: Filter hidden items unless requested.
