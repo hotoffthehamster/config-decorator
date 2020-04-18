@@ -289,6 +289,18 @@ class ConfigDecorator(object):
 
     # ***
 
+    def del_not_persisted(self, config_obj):
+        """Removes entries from config_obj without a value from the "config" source.
+        """
+        def visitor(condec, keyval):
+            if keyval.persisted:
+                return  # Keep.
+            del condec[keyval]
+
+        self.walk(visitor)
+
+    # ***
+
     def find_root(self):
         """Returns the topmost section object, that which has no parent."""
         if not self._parent:
@@ -306,18 +318,6 @@ class ConfigDecorator(object):
         """
         def visitor(condec, keyval):
             keyval.forget_config_value()
-        self.walk(visitor)
-
-    # ***
-
-    def del_not_persisted(self, config_obj):
-        """Removes entries from config_obj without a value from the "config" source.
-        """
-        def visitor(condec, keyval):
-            if keyval.persisted:
-                return  # Keep.
-            del condec[keyval]
-
         self.walk(visitor)
 
     # ***
