@@ -443,6 +443,9 @@ class ConfigDecorator(object):
             return n_settings
 
         def choose_default_or_confval(ckv):
+            if skip_unset and not ckv.persisted:
+                # This includes ckv.ephemeral.
+                raise AttributeError()
             if unmutated:
                 return ckv.value_unmutated
             if ckv.ephemeral:
@@ -453,13 +456,13 @@ class ConfigDecorator(object):
                 # `ckv.value` here is essentially `ckv._typify(ckv.default)`.
                 return ckv.value
             if (
-                (use_defaults or (not ckv.persisted and not skip_unset))
-                and (not ckv.hidden or add_hidden)
+                (use_defaults or not ckv.persisted)
+                and (add_hidden or not ckv.hidden)
             ):
                 # ckv.default is the non-conformed input value;
                 # we want the value after it's been internalized.
                 return ckv.value_from_default
-            elif not use_defaults and ckv.persisted:
+            if not use_defaults and ckv.persisted:
                 return ckv.value_from_config
             raise AttributeError()
 
