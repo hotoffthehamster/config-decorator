@@ -310,6 +310,18 @@ class ConfigDecorator(object):
 
     # ***
 
+    def del_not_persisted(self, config_obj):
+        """Removes entries from config_obj without a value from the "config" source.
+        """
+        def visitor(condec, keyval):
+            if keyval.persisted:
+                return  # Keep.
+            del condec[keyval]
+
+        self.walk(visitor)
+
+    # ***
+
     def section_path(self, sep=None, _parts=None):
         """Returns a flattened canonicalized representation of the complete section path.
 
@@ -328,7 +340,10 @@ class ConfigDecorator(object):
             sep = self.SEP
         # Ignore the root element. Start with its sections.
         if self._parent is None:
-            return sep.join(_parts)
+            if sep == []:
+                return _parts
+            else:
+                return sep.join(_parts)
         _parts.insert(0, self._name)
         return self._parent.section_path(sep, _parts)
 
@@ -343,9 +358,14 @@ class ConfigDecorator(object):
                      and a reference to the
                      :class:`config_decorator.key_chained_val.KeyChainedValue` object.
         """
-        for keyval in self._key_vals.values():
+        # NOTE: For del_not_persisted to work, convert values() iterator to list,
+        #       so that items can be deleted from the dictionary. (lb): I'd guess
+        #       the only "hit" we take is needing to store the items in memory;
+        #       otherwise performance should be the same... not that you'd notice
+        #       with a simple config structure, though.
+        for keyval in list(self._key_vals.values()):
             visitor(self, keyval)
-        for conf_dcor in self._sections.values():
+        for conf_dcor in list(self._sections.values()):
             conf_dcor.walk(visitor)
 
     # ***
@@ -728,6 +748,13 @@ class ConfigDecorator(object):
                 """
                 return self
         return anyobj()
+
+    def __delitem__(self, name_or_keyval):
+        try:
+            name = name_or_keyval.name
+        except AttributeError:
+            name = name_or_keyval
+        del self._key_vals[name]
 
     def __getitem__(self, name):
         """Returns the section or setting with the given name.
