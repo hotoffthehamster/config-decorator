@@ -402,3 +402,10 @@ linkcheck_anchors_ignore = [
     "get-started",
 ]
 
+linkcheck_ignore = [
+    # It's true, "Anchor 'metricsmethodlength' not found". The HTML looks like:
+    #   <dt id="conf-envlist">
+    # but somehow it works (in Chromium for me, (lb)).
+    'https://tox.readthedocs.io/en/latest/config.html#conf-envlist',
+]
+
