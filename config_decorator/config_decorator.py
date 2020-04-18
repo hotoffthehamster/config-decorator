@@ -395,6 +395,7 @@ class ConfigDecorator(object):
         skip_unset=False,
         use_defaults=False,
         unmutated=False,
+        keep_empties=False,
     ):
         """Updates the passed dict with all configuration settings.
 
@@ -438,7 +439,7 @@ class ConfigDecorator(object):
                 use_defaults=use_defaults,
                 unmutated=unmutated,
             )
-            if not n_settings and not existed:
+            if not n_settings and not existed and not keep_empties:
                 del config[section]
             return n_settings
 
