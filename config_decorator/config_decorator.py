@@ -623,6 +623,14 @@ class ConfigDecorator(object):
             self._sections[section_name] = sub_dcor
         return sub_dcor
 
+    def set_section(self, section_name, sub_dcor):
+        """Assigns the passed ConfigDecorator to the section key named.
+
+        # NOTE: This method is clobbery.
+        """
+        self._sections[section_name] = sub_dcor
+        sub_dcor._parent = self
+
     # ***
 
     def keys(self):
