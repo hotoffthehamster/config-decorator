@@ -10,6 +10,25 @@ History
 
 .. :changelog:
 
+2.0.10 (2020-04-18)
+===================
+
+- Bugfix: ``as_dict`` excludes custom user settings because not marked from-config.
+
+  - That is, when a client calls ``update_gross`` to add free-form custom user
+    config (i.e., settings that were not defined by an ``@section``-decorated
+    config function), be sure to mark the values as from-config, and not
+    from-default. Otherwise, ``as_dict`` ignores the values, thinking they're
+    not from the user.
+
+- Bugfix: When ``apply_items`` extracts config dict, ``skip_unset`` not honored.
+
+- Feature: Option to include section even if all keys were excluded (``as_dict``).
+
+- Feature: New classmethod for re-rooting section.
+
+- Improve: New ``set_section`` method to add subsections.
+
 2.0.9 (2020-04-17)
 ==================
 
