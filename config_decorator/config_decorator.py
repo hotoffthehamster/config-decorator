@@ -600,10 +600,11 @@ class ConfigDecorator(object):
                 return conf_dcor._key_vals[setting_name]
             ckv = KeyChainedValue(
                 name=setting_name,
-                default_f=lambda x: setting_value,
+                default_f=lambda x: '',
                 doc=_('Created by `setdefault`'),
                 section=self,
             )
+            ckv.value = setting_value
             self._key_vals[ckv.name] = ckv
             return setting_value
 
