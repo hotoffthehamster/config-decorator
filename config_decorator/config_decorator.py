@@ -896,6 +896,17 @@ class ConfigDecorator(object):
 
     # ***
 
+    @classmethod
+    def create_root_for_section(cls, section_name, section_cdec):
+        """Creates a new ConfigDecorator as root of the passed instance.
+        """
+        section_cdec._name = section_name
+        condec = ConfigDecorator(object, cls_or_name='', parent=None)
+        condec.set_section(section_name, section_cdec)
+        return condec
+
+    # ***
+
 
 # Note that Python invokes the decorator with the item being decorated. If
 # you want to pass arguments to the decorator, you can call a function to
