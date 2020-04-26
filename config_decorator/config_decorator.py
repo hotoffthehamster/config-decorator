@@ -447,6 +447,16 @@ class ConfigDecorator(object):
             if skip_unset and not ckv.persisted:
                 # This includes ckv.ephemeral.
                 raise AttributeError()
+            if (
+                (use_defaults or not ckv.persisted)
+                and (add_hidden or not ckv.hidden)
+            ):
+                if not unmutated:
+                    # ckv.default is the non-conformed input value;
+                    # we want the value after it's been internalized.
+                    return ckv.value_from_default
+                else:
+                    return ckv.default
             if unmutated:
                 return ckv.value_unmutated
             if ckv.ephemeral:
@@ -456,13 +466,6 @@ class ConfigDecorator(object):
                 # fall-through case for the broader value() method. Note that
                 # `ckv.value` here is essentially `ckv._typify(ckv.default)`.
                 return ckv.value
-            if (
-                (use_defaults or not ckv.persisted)
-                and (add_hidden or not ckv.hidden)
-            ):
-                # ckv.default is the non-conformed input value;
-                # we want the value after it's been internalized.
-                return ckv.value_from_default
             if not use_defaults and ckv.persisted:
                 return ckv.value_from_config
             raise AttributeError()
