@@ -44,8 +44,6 @@ sys.path.insert(0, project_root)
 # ┃                                                                     ┃
 # ┃ YOU/DEV: Customize this import and these strings for your project.  ┃
 
-import config_decorator
-
 project_dist = 'config-decorator'
 package_name = 'config_decorator'
 project_ghuser = 'hotoffthehamster'
