@@ -55,6 +55,7 @@ class KeyChainedValue(object):
         hidden=False,
         validate=None,
         conform=None,
+        recover=None,
     ):
         """Inits a :class:`KeyChainedValue` object.
 
@@ -111,8 +112,10 @@ class KeyChainedValue(object):
             validate: An optional function to validate the value when set
                       from user input. If the validate function returns a
                       falsey value, setting the value raises ``ValueError``.
-            conform: If set, function used to translate config value to
-                           value used internally. Useful for datetime, etc.
+            conform: If set, function used to translate config value to the
+                     value used internally. Useful for log levels, datetime, etc.
+            recover: If set, function used to convert internal value back to
+                     storable value. Useful to covert log level back to name, etc.
         """
         self._section = section
         self._name = name
@@ -123,6 +126,7 @@ class KeyChainedValue(object):
         self._hidden = hidden
         self._validate_f = validate
         self._conform_f = conform
+        self._recover_f = recover
 
         self._value_allow_none = allow_none
         self._value_type = self._deduce_value_type(value_type)
@@ -496,7 +500,10 @@ class KeyChainedValue(object):
             return str(self._val_origin)
         except AttributeError:
             # No config value set, so stringify the most prominent value.
-            return str(self.value)
+            if self._recover_f:
+                return self._recover_f(self.value)
+            else:
+                return str(self.value)
 
     # ***
 
