@@ -10,6 +10,13 @@ History
 
 .. :changelog:
 
+2.0.11 (2020-04-25)
+===================
+
+- Bugfix: ``apply_edits`` returning *mutated* default.
+
+- Improve: Optional method to recover storable value.
+
 2.0.10 (2020-04-18)
 ===================
 

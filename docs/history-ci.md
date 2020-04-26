@@ -2,6 +2,12 @@
 
 [comment]: # DEV: release-ghub-pypi scrapes Markdown from the first section below for the GitHub release.
 
+## 2.0.11 (2020-04-25)
+
+- Bugfix: `apply_edits` returning *mutated* default.
+
+- Improve: Optional method to recover storable value.
+
 ## 2.0.10 (2020-04-18)
 
 - Bugfix: `as_dict` excludes custom user settings because not marked from-config.
