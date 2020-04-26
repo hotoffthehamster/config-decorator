@@ -406,7 +406,7 @@ class ConfigDecorator(object):
             skip_unset: Set True to exclude settings that do not have a value
                         set from the "config" source.
             use_defaults: Set True to use the default value for every setting.
-            unmutated: Set True to use the default value for every setting.
+            unmutated: Set True to use the original config values when possible.
 
         Returns:
             The number of settings updated or added to the "config" dict.
