@@ -433,7 +433,7 @@ class TestConfigDecoratorUpdateKnown:
                 'unknown': 'unconsumed',
             }
         }
-        _unconsumed = rootcfg.update_known(cfgdict)  # noqa: F841: var never used
+        _unconsumed, _errs = rootcfg.update_known(cfgdict)  # noqa: F841: var never used
 
 
 # ***

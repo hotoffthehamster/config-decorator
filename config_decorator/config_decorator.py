@@ -474,7 +474,7 @@ class ConfigDecorator(object):
 
     # ***
 
-    def update_known(self, config):
+    def update_known(self, config, errors_ok=False):
         """Updates existing settings values from a given dictionary.
 
         Args:
@@ -486,21 +486,31 @@ class ConfigDecorator(object):
             that did not correspond to a known section or setting.
         """
         unconsumed = {name: None for name in config.keys()}
+        error_messages = {}
         for section, conf_dcor in self._sections.items():
             if section in config:
-                unsubsumed = conf_dcor.update_known(config[section])
+                unsubsumed, sub_errors = conf_dcor.update_known(
+                    config[section], errors_ok=errors_ok,
+                )
                 if not unsubsumed:
                     del unconsumed[section]
                 else:
                     unconsumed[section] = unsubsumed
+                if sub_errors:
+                    error_messages[section] = sub_errors
         for name, ckv in self._key_vals.items():
             if ckv.ephemeral:
                 # Essentially unreachable, unless hacked config file.
                 continue
             if name in config:
-                ckv.value = config[name]
+                try:
+                    ckv.value = config[name]
+                except ValueError as err:
+                    if not errors_ok:
+                        raise
+                    error_messages[name] = str(err)
                 del unconsumed[name]
-        return unconsumed
+        return unconsumed, error_messages
 
     # ***
 
