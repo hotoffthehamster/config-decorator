@@ -10,6 +10,11 @@ History
 
 .. :changelog:
 
+2.0.12 (2020-04-25)
+===================
+
+- Feature: Option to collect errors on update, rather than raise.
+
 2.0.11 (2020-04-25)
 ===================
 
