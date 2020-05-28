@@ -291,13 +291,13 @@ class TestConfigDecoratorKeysValuesItems:
 class TestConfigDecoratorAttributeMagic:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg.asobj.level1.level2.baz.value == 'bat')
+        assert rootcfg.asobj.level1.level2.baz.value == 'bat'
 
 
 class TestConfigDecoratorSubscriptability:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg['level1']['level2']['baz'] == 'bat')
+        assert rootcfg['level1']['level2']['baz'] == 'bat'
 
 
 # ***
@@ -306,22 +306,22 @@ class TestConfigDecoratorFindAllManyParts:
     def test_something(self):
         rootcfg = generate_config_root()
         settings = rootcfg.find_all(['level1', 'level2', 'baz'])
-        assert(settings[0].value == 'bat')
+        assert settings[0].value == 'bat'
 
 
 class TestConfigDecoratorFindAllNoPartsSelf:
     def test_something(self):
         rootcfg = generate_config_root()
         settings = rootcfg.find_all(parts=[])
-        assert(settings == [rootcfg])
+        assert settings == [rootcfg]
 
 
 class TestConfigDecoratorFindSection:
     def test_something(self):
         rootcfg = generate_config_root()
         settings = rootcfg.find_all(parts=['level1', 'level2'])
-        assert(len(settings) == 1)
-        assert(settings[0] is rootcfg['level1']['level2'])
+        assert len(settings) == 1
+        assert settings[0] is rootcfg['level1']['level2']
 
 
 # ***
@@ -329,9 +329,9 @@ class TestConfigDecoratorFindSection:
 class TestConfigDecoratorFindRoot:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg['level1'].find_root() is rootcfg)
+        assert rootcfg['level1'].find_root() is rootcfg
         rootcfg = generate_config_root()
-        assert(rootcfg['level1'].asobj.foo.find_root() is rootcfg)
+        assert rootcfg['level1'].asobj.foo.find_root() is rootcfg
 
 
 # ***
@@ -339,8 +339,8 @@ class TestConfigDecoratorFindRoot:
 class TestConfigDecoratorSectionPath:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg.asobj.level1.level2._.section_path() == 'level1.level2')
-        assert(rootcfg.asobj.level1.level2._.section_path('_') == 'level1_level2')
+        assert rootcfg.asobj.level1.level2._.section_path() == 'level1.level2'
+        assert rootcfg.asobj.level1.level2._.section_path('_') == 'level1_level2'
 
 
 # ***
@@ -377,7 +377,7 @@ class TestConfigDecoratorSetAttributeValueList:
     def test_something(self):
         rootcfg = generate_config_root()
         rootcfg['default_value_list_test_implicit'] = 123
-        assert(rootcfg['default_value_list_test_implicit'] == [123, ])
+        assert rootcfg['default_value_list_test_implicit'] == [123, ]
 
 
 # ***
@@ -458,7 +458,7 @@ class TestConfigDecoratorFindSettingOkay:
     def test_something(self):
         rootcfg = generate_config_root()
         setting = rootcfg.find_setting(['level1', 'level2', 'baz'])
-        assert(setting.value == 'bat')
+        assert setting.value == 'bat'
 
 
 class TestConfigDecoratorFindSettingFailOnePart:
@@ -479,7 +479,7 @@ class TestConfigDecoratorFindSettingOnePart:
     def test_something(self):
         rootcfg = generate_config_root()
         setting = rootcfg.find_setting(['conflict'])
-        assert(setting.value == 'level1')
+        assert setting.value == 'level1'
 
 
 # ***
@@ -498,7 +498,7 @@ class TestConfigDecoratorAsobjOkay:
 class TestConfigDecoratorSettingWalk:
     def test_something(self):
         def visitor(section, setting):
-            assert(section is rootcfg.asobj.level1.level2._)
+            assert section is rootcfg.asobj.level1.level2._
         rootcfg = generate_config_root()
         rootcfg.asobj.level1.level2.baz.walk(visitor)
 
@@ -552,7 +552,7 @@ class TestSectionSettingFromEnvvar:
         environame = 'TEST_LEVEL1_FOO'
         import os
         os.environ[environame] = 'zab'
-        assert(rootcfg.asobj.level1.foo.value == 'zab')
+        assert rootcfg.asobj.level1.foo.value == 'zab'
         del os.environ[environame]
 
 
@@ -561,22 +561,22 @@ class TestSectionSettingFromEnvvar:
 class TestSectionSettingPrecedence:
     def test_something(self):
         rootcfg = generate_config_root()
-        assert(rootcfg.asobj.level1.foo.value == 'baz')
+        assert rootcfg.asobj.level1.foo.value == 'baz'
         # Note that setting value assumes from config.
         rootcfg.asobj.level1.foo.value = 'bat'
-        assert(rootcfg.asobj.level1.foo.value_from_config == 'bat')
-        assert(rootcfg.asobj.level1.foo.value == 'bat')
+        assert rootcfg.asobj.level1.foo.value_from_config == 'bat'
+        assert rootcfg.asobj.level1.foo.value == 'bat'
         #
         from config_decorator.key_chained_val import KeyChainedValue
         KeyChainedValue._envvar_prefix = 'TEST_'
         environame = 'TEST_LEVEL1_FOO'
         import os
         os.environ[environame] = 'zab'
-        assert(rootcfg.asobj.level1.foo.value == 'zab')
+        assert rootcfg.asobj.level1.foo.value == 'zab'
         # Note that int will be converted to setting type, which is string.
         rootcfg.asobj.level1.foo.value_from_cliarg = 123
-        assert(rootcfg.asobj.level1.foo.value == '123')
+        assert rootcfg.asobj.level1.foo.value == '123'
         #
         rootcfg.asobj.level1.foo.value_from_forced = 'perfect!'
-        assert(rootcfg.asobj.level1.foo.value == 'perfect!')
+        assert rootcfg.asobj.level1.foo.value == 'perfect!'
 

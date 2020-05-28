@@ -141,21 +141,21 @@ Here's a simple example:
     cfgroot = generate_config()
 
     # The config object is subscriptable.
-    assert(cfgroot['mood']['color'] == 'red')
+    assert cfgroot['mood']['color'] == 'red'
 
     # You can override defaults with user values.
     cfgroot['mood']['color'] = 'blue'
-    assert(cfgroot['mood']['color'] == 'blue')
+    assert cfgroot['mood']['color'] == 'blue'
 
     # And you can always reset your values back to default.
-    assert(cfgroot.mood.color.default == 'red')
+    assert cfgroot.mood.color.default == 'red'
     cfgroot.forget_config_values()
-    assert(cfgroot['mood']['color'] == 'red')
+    assert cfgroot['mood']['color'] == 'red'
 
     # The config object is attribute-aware (allows dot-notation).
     cfgroot.vibe.cleopatra.value = 100
     # And list-type values intelligently convert atoms to lists.
-    assert(cfgroot.vibe.cleopatra.value == [100])
+    assert cfgroot.vibe.cleopatra.value == [100]
 
     # The config object is environ-aware, and prefers values it reads
     # from the environment over those from a config file.
@@ -163,7 +163,7 @@ Here's a simple example:
     from config_decorator.key_chained_val import KeyChainedValue
     KeyChainedValue._envvar_prefix = 'TEST_'
     os.environ['TEST_MOOD_VOLUME'] = '8'
-    assert(cfgroot.mood.volume.value == 8)
+    assert cfgroot.mood.volume.value == 8
 
     # The config object can be flattened to a dict, which makes it easy
     # to persist settings keys and values to disk using another package.
