@@ -357,7 +357,7 @@ class KeyChainedValue(object):
                 addendum = _validate(_value)
             if addendum is None:
                 try:
-                    _value = _typify_and_conform(_value)
+                    _value = _conform_or_typify(_value)
                 except Exception as err:
                     addendum = str(err)
             if addendum is not None:
@@ -368,11 +368,10 @@ class KeyChainedValue(object):
                 )
             return _value
 
-        def _typify_and_conform(_value):
-            _value = self._typify(value)
-            if self._conform_f:
-                _value = self._conform_f(_value)
-            return _value
+        def _conform_or_typify(_value):
+            if self._conform_f is not None:
+                return self._conform_f(_value)
+            return self._typify(value)
 
         def _validate(_value):
             # Returns None if valid value, or string if it's not.
