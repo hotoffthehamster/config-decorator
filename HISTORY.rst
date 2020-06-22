@@ -10,6 +10,11 @@ History
 
 .. :changelog:
 
+2.0.13 (2020-06-29)
+===================
+
+- Bugfix: Avoid typifying value (e.g., to str) before conform callback.
+
 2.0.12 (2020-04-25)
 ===================
 
