@@ -3,11 +3,11 @@ config-decorator User Options Framework
 #######################################
 .. config-decorator Documentation
 
-.. image:: https://api.travis-ci.com/hotoffthehamster/config-decorator.svg?branch=master
+.. image:: https://api.travis-ci.com/hotoffthehamster/config-decorator.svg?branch=release
   :target: https://travis-ci.com/hotoffthehamster/config-decorator
   :alt: Build Status
 
-.. image:: https://codecov.io/gh/hotoffthehamster/config-decorator/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/hotoffthehamster/config-decorator/branch/release/graph/badge.svg
   :target: https://codecov.io/gh/hotoffthehamster/config-decorator
   :alt: Coverage Status
 
@@ -24,7 +24,7 @@ config-decorator User Options Framework
   :alt: PyPI Release Status
 
 .. image:: https://img.shields.io/github/license/hotoffthehamster/config-decorator.svg?style=flat
-  :target: https://github.com/hotoffthehamster/config-decorator/blob/master/LICENSE
+  :target: https://github.com/hotoffthehamster/config-decorator/blob/release/LICENSE
   :alt: License Status
 
 .. |dob| replace:: ``dob``

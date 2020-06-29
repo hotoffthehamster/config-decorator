@@ -6,7 +6,7 @@ Contributing
 .. _config-decorator: https://github.com/hotoffthehamster/config-decorator
 
 .. |user-docs| replace:: user documentation
-.. _user-docs: https://github.com/hotoffthehamster/config-decorator/tree/master/docs
+.. _user-docs: https://github.com/hotoffthehamster/config-decorator/tree/release/docs
 
 .. |envlist| replace:: ``envlist``
 .. _envlist: https://tox.readthedocs.io/en/latest/config.html#conf-envlist
@@ -85,7 +85,7 @@ us to improve it.
 
 This includes the official |user-docs|_,
 the `README
-<https://github.com/hotoffthehamster/config-decorator/blob/master/README.rst>`__,
+<https://github.com/hotoffthehamster/config-decorator/blob/release/README.rst>`__,
 and the inline docstrings that generate the `API documentation
 <https://config-decorator.readthedocs.io/en/latest/modules.html>`__
 (per |PEP-257|_ and |goog-py-sty|_).
