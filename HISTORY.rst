@@ -3,10 +3,10 @@ History
 #######
 
 .. |dob| replace:: ``dob``
-.. _dob: https://github.com/hotoffthehamster/dob
+.. _dob: https://github.com/tallybark/dob
 
 .. |nark| replace:: ``nark``
-.. _nark: https://github.com/hotoffthehamster/nark
+.. _nark: https://github.com/tallybark/nark
 
 .. :changelog:
 

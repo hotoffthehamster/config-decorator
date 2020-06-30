@@ -28,10 +28,10 @@ config-decorator User Options Framework
   :alt: License Status
 
 .. |dob| replace:: ``dob``
-.. _dob: https://github.com/hotoffthehamster/dob
+.. _dob: https://github.com/tallybark/dob
 
 .. |nark| replace:: ``nark``
-.. _nark: https://github.com/hotoffthehamster/nark
+.. _nark: https://github.com/tallybark/nark
 
 .. |config-decorator| replace:: ``config-decorator``
 .. _config-decorator: https://github.com/hotoffthehamster/config-decorator
