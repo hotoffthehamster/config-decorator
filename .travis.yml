@@ -4,7 +4,7 @@
 
 # Travis CI config.
 #
-#   https://travis-ci.org/hotoffthehamster/config-decorator
+#   https://travis-ci.com/hotoffthehamster/config-decorator
 
 language: python
 
