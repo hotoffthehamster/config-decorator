@@ -169,13 +169,13 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
     $
 
 4. Before starting work on a new feature or bug fix, make sure your
-   ``develop`` branch is up to date with the official branch::
+   ``release`` branch is up to date with the official branch::
 
     (config-decorator) $ cdproject
     (config-decorator) $ git remote add upstream git@github.com:hotoffthehamster/config-decorator.git
     (config-decorator) $ git fetch upstream
-    (config-decorator) $ git checkout develop
-    (config-decorator) $ git rebase upstream/develop
+    (config-decorator) $ git checkout release
+    (config-decorator) $ git rebase upstream/release
     (config-decorator) $ git push origin HEAD
 
 5. Create a branch for local development. If you are working on an known issue,
@@ -338,20 +338,20 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
 
     $ git push origin feature/ISSUE-123-name-of-your-issue --force
 
-   .. _rebase_atop_develop:
+   .. _rebase_atop_release:
 
 10. Finally,
     `submit a pull request
     <https://github.com/hotoffthehamster/config-decorator/pulls>`_
     through the GitHub website.
 
-    *Important:* Please rebase your code against ``develop`` and resolve
+    *Important:* Please rebase your code against ``release`` and resolve
     merge conflicts, so that the main project maintainer does not have
     to do so themselves. E.g.,::
 
      $ git checkout feature/ISSUE-123-name-of-your-issue
      $ git fetch upstream
-     $ git rebase upstream/develop
+     $ git rebase upstream/release
      # Resolve any conflicts, then force-push.
      $ git push origin HEAD --force
      # And then open the Pull Request.
@@ -391,11 +391,11 @@ Before you submit a pull request, check that it meets these guidelines:
 
      __ rebase_and_squash_
 
-   * Rebase your work atop develop (as `mentioned above`__)
-     before creating the PR, or after making any requested
-     changes.
+   * Rebase your work atop the main development branch, "release"
+     (as `mentioned above`__) before creating the PR, or after making
+     any requested changes.
 
-     __ rebase_atop_develop_
+     __ rebase_atop_release_
 
 4. Run ``make test-all``.
 
