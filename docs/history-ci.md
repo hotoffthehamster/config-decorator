@@ -2,6 +2,10 @@
 
 [comment]: # DEV: release-ghub-pypi scrapes Markdown from the first section below for the GitHub release.
 
+## 2.0.14 (2020-07-02)
+
+- Docs: Update documentation.
+
 ## 2.0.13 (2020-06-29)
 
 - Bugfix: Avoid typifying value (e.g., to str) before conform callback.
