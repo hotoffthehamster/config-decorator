@@ -185,14 +185,14 @@ Ready to contribute? Here's how to set up |config-decorator|_ for local developm
 
    Now you can add and edit code in your local working directory.
 
-6. Do your work and make one or more sane, concise commits::
+6. Do your work and make one or more neat, concise commits::
 
     $ git add -p
     $ git commit -m "<Category>: <Short description of changes.>
 
     - <Longer description, if necessary.>"
 
-   IMPORTANT: Please make each commit as small and sane as possible.
+   IMPORTANT: Please make each commit as small and neat as possible.
 
    Follow these guidelines:
 
